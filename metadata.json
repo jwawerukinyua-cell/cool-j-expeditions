@@ -1,0 +1,6 @@
+{
+  "name": "Cool J Expeditions",
+  "description": "Premium Kenya safaris, Mount Kenya climbs, and East Africa expeditions led by expert guide Cool J.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
