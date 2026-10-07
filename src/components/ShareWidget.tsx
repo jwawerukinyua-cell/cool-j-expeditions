@@ -11,7 +11,7 @@ export default function ShareWidget({
   text = "Plan your bucket-list adventure with Cool J Expeditions! Custom climbs, safaris, and local authenticity."
 }: ShareWidgetProps) {
   const [copied, setCopied] = useState(false);
-  const [shareUrl, setShareUrl] = useState("https://ais-pre-fhuvww6mrokigui5cm3kbx-454258292215.europe-west3.run.app");
+  const [shareUrl, setShareUrl] = useState("https://cooljexpeditions.co.ke");
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
