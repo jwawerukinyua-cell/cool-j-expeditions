@@ -1034,20 +1034,13 @@ export default function App() {
               Ascend to alpine glaciers with GUIDES who know every rock of Mount Kenya, track endangered black rhinos off the grid, and enter Maasai homesteads as friends-not tourists. Based out of beautiful Nanyuki, Kenya.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a
-                href="#builder"
-                className="bg-[#C9A24A] hover:bg-[#D9B85A] text-[#0b3d2e] font-black px-7 py-4 rounded-xl text-sm tracking-wide shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
-                id="hero-cta-plan-trip"
-              >
-                Plan Your Journey <ArrowRight className="h-4 w-4" />
-              </a>
+            <div className="pt-4">
               <a
                 href="#experiences"
-                className="bg-transparent border-2 border-white/40 hover:border-[#C9A24A] hover:bg-white/5 text-white font-bold px-7 py-4 rounded-xl text-sm tracking-wide transition-all"
+                className="inline-flex items-center gap-2.5 bg-[#C9A24A] hover:bg-[#D9B85A] text-[#0b3d2e] font-black px-8 py-4 rounded-xl text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                 id="hero-cta-explore-routes"
               >
-                Explore Custom Routes
+                Explore Custom Routes <ArrowRight className="h-4 w-4" />
               </a>
             </div>
 
@@ -1704,10 +1697,10 @@ export default function App() {
 
 
       {/* TRAVEL-SPECIFIC BOOKING INTEGRATION + DYNAMIC AI ACCEPTER */}
-      <section className="bg-white py-12 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-[#EAE1D2] scroll-mt-24" id="builder">
-        <div className="max-w-6xl mx-auto">
+      <section className="bg-white py-12 sm:py-20 px-3 sm:px-6 lg:px-8 border-t border-[#EAE1D2] scroll-mt-24 overflow-x-clip w-full max-w-full" id="builder">
+        <div className="max-w-6xl mx-auto w-full min-w-0">
           
-          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 px-2">
             <span className="inline-block px-3 py-1 bg-[#F4EDE2] text-[#0b3d2e] border border-[#C9A24A]/30 rounded text-xs font-bold uppercase tracking-wider">
               REAL-TIME ITINERARY & EXPEDITION ARCHITECT
             </span>
@@ -1719,34 +1712,34 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
+          <div className="grid lg:grid-cols-12 gap-8 items-start w-full min-w-0">
             
             {/* Steps Container Form */}
-            <form onSubmit={handleQuoteSubmit} className="lg:col-span-7 bg-[#FAF8F5] p-4 sm:p-8 rounded-2xl border border-[#E9E1D2] shadow-sm space-y-6">
+            <form onSubmit={handleQuoteSubmit} className="lg:col-span-7 w-full min-w-0 bg-[#FAF8F5] p-3.5 sm:p-8 rounded-2xl border border-[#E9E1D2] shadow-sm space-y-6 overflow-hidden">
               
-              <div className="text-sm font-bold text-[#0b3d2e] pb-2.5 border-b border-[#F2ECE2] flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
+              <div className="text-sm font-bold text-[#0b3d2e] pb-2.5 border-b border-[#F2ECE2] flex flex-wrap items-center justify-between gap-2 min-w-0">
+                <div className="flex items-center gap-2 min-w-0 max-w-full">
                   <Compass className="h-5 w-5 text-[#C9A24A] shrink-0" />
-                  <span className="text-sm sm:text-base font-bold text-[#0b3d2e]">Step 1: Choose Expedition Details</span>
+                  <span className="text-sm sm:text-base font-bold text-[#0b3d2e] truncate">Step 1: Choose Expedition Details</span>
                 </div>
                 <span className="text-[11px] font-bold text-[#C9A24A] bg-[#0b3d2e] px-2.5 py-0.5 rounded-full shrink-0 shadow-xs">
                   1 - 30 Guests Supported
                 </span>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-4 w-full min-w-0">
                 
-                <div className="sm:col-span-2">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5">
+                <div className="sm:col-span-2 min-w-0 w-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1.5 min-w-0">
                     <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider">
                       🌍 Target Destination / Circuit
                     </label>
-                    <span className="text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80 font-medium self-start sm:self-auto">
+                    <span className="text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80 font-medium self-start sm:self-auto max-w-full break-words">
                       Kenya, Uganda, Tanzania & Cross-Border Combos
                     </span>
                   </div>
                   <select
-                    className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                    className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs truncate"
                     value={region}
                     onChange={(e) => {
                       const newRegion = e.target.value;
@@ -1793,12 +1786,12 @@ export default function App() {
                   </select>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                   <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider mb-1.5">
                     🎯 Vibe & Specialty Activity
                   </label>
                   <select
-                    className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                    className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs truncate"
                     value={activity}
                     onChange={(e) => setActivity(e.target.value)}
                   >
@@ -1812,14 +1805,14 @@ export default function App() {
                   </select>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                   <div className="flex justify-between items-center mb-1.5">
                     <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider">
                       📅 Trip Duration (Linked to Destination)
                     </label>
                   </div>
                   <select
-                    className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                    className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs truncate"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
                   >
@@ -1831,12 +1824,12 @@ export default function App() {
                   </select>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                   <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider mb-1.5">
                     💰 Expedition Tier Guide
                   </label>
                   <select
-                    className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                    className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs truncate"
                     value={budget}
                     onChange={(e) => setBudget(e.target.value)}
                   >
@@ -1847,31 +1840,31 @@ export default function App() {
                   </select>
                 </div>
 
-                <div>
+                <div className="min-w-0 w-full">
                   <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider mb-1.5">
                     🚀 Preferred Start Date
                   </label>
                   <input
                     type="date"
-                    className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                    className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                   />
                 </div>
 
                 {/* Accommodation & Meals Information Note */}
-                <div className="sm:col-span-2 bg-[#FAF8F5] border border-[#E8E0D4] rounded-xl p-3 sm:p-3.5 text-xs text-gray-700 flex items-start gap-2.5 shadow-xs">
+                <div className="sm:col-span-2 min-w-0 w-full bg-[#FAF8F5] border border-[#E8E0D4] rounded-xl p-3 sm:p-3.5 text-xs text-gray-700 flex items-start gap-2.5 shadow-xs">
                   <span className="text-[#C9A24A] text-base leading-none mt-0.5 shrink-0">ℹ️</span>
-                  <div className="leading-relaxed text-[11px] sm:text-xs">
+                  <div className="leading-relaxed text-[11px] sm:text-xs min-w-0 break-words">
                     <span className="font-bold text-[#0b3d2e]">Accommodation & Dining: </span>
                     Most of our international travelers have their own accommodations and meal plans sorted according to personal preferences. 
                     <span className="font-bold text-[#8F5C38]"> Need us to take care of it?</span> Cool J and the team can gladly book curated luxury safari lodges, wilderness eco-camps, or mountain huts upon request at direct local partner rates!
                   </div>
                 </div>
 
-                <div className="sm:col-span-2 bg-[#F3EFE8] p-3.5 sm:p-4 rounded-xl border border-[#E3DBD0]">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2.5">
-                    <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider">
+                <div className="sm:col-span-2 min-w-0 w-full bg-[#F3EFE8] p-3 sm:p-4 rounded-xl border border-[#E3DBD0] overflow-hidden">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2.5 min-w-0">
+                    <label className="block text-xs font-bold text-[#0b3d2e] uppercase tracking-wider truncate">
                       👥 Explorer Group Count ({guestsCount} {guestsCount === 1 ? "Traveler" : "Travelers"})
                     </label>
                     <span className="text-xs font-mono font-bold text-[#C9A24A] bg-[#0b3d2e] px-2.5 py-0.5 rounded self-start sm:self-auto shrink-0 shadow-xs">
@@ -1879,11 +1872,11 @@ export default function App() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-3 w-full min-w-0">
                     <button
                       type="button"
                       onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))}
-                      className="h-10 w-10 shrink-0 flex items-center justify-center rounded-lg bg-white border border-[#DDD5C7] text-[#0b3d2e] font-black hover:bg-[#C9A24A]/20 transition-all shadow-sm active:scale-95"
+                      className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 flex items-center justify-center rounded-lg bg-white border border-[#DDD5C7] text-[#0b3d2e] font-black hover:bg-[#C9A24A]/20 transition-all shadow-sm active:scale-95"
                     >
                       <Minus className="h-4 w-4" />
                     </button>
@@ -1894,32 +1887,32 @@ export default function App() {
                       max="30"
                       value={guestsCount}
                       onChange={(e) => setGuestsCount(parseInt(e.target.value) || 1)}
-                      className="flex-1 accent-[#0b3d2e] h-2 bg-gray-200 rounded-lg cursor-pointer"
+                      className="flex-1 min-w-0 accent-[#0b3d2e] h-2 bg-gray-200 rounded-lg cursor-pointer"
                     />
 
-                    <div className="w-14 sm:w-16 text-center shrink-0">
+                    <div className="w-12 sm:w-16 text-center shrink-0">
                       <input
                         type="number"
                         min="1"
                         max="30"
                         value={guestsCount}
                         onChange={(e) => setGuestsCount(Math.min(30, Math.max(1, parseInt(e.target.value) || 1)))}
-                        className="w-full bg-white border border-[#DDD5C7] rounded-lg p-1.5 text-center text-sm font-bold text-[#0b3d2e] font-mono shadow-xs"
+                        className="w-full bg-white border border-[#DDD5C7] rounded-lg p-1.5 text-center text-xs sm:text-sm font-bold text-[#0b3d2e] font-mono shadow-xs"
                       />
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setGuestsCount(Math.min(30, guestsCount + 1))}
-                      className="h-10 w-10 shrink-0 flex items-center justify-center rounded-lg bg-white border border-[#DDD5C7] text-[#0b3d2e] font-black hover:bg-[#C9A24A]/20 transition-all shadow-sm active:scale-95"
+                      className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 flex items-center justify-center rounded-lg bg-white border border-[#DDD5C7] text-[#0b3d2e] font-black hover:bg-[#C9A24A]/20 transition-all shadow-sm active:scale-95"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
                   </div>
 
                   {/* Quick Select Preset Buttons */}
-                  <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-[#E8E0D4] items-center">
-                    <span className="text-[10px] font-bold text-gray-500 mr-1">Quick Select:</span>
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-3 pt-2.5 border-t border-[#E8E0D4] items-center min-w-0">
+                    <span className="text-[10px] font-bold text-gray-500 mr-1 shrink-0">Quick Select:</span>
                     {[
                       { count: 1, label: "1 Solo" },
                       { count: 2, label: "2 Couple" },
@@ -1947,29 +1940,29 @@ export default function App() {
 
               </div>
 
-              <div className="pt-2">
-                <div className="text-sm font-bold text-[#0b3d2e] pb-2 border-b border-[#F2ECE2] mb-3 flex items-center gap-2">
+              <div className="pt-2 min-w-0 w-full">
+                <div className="text-sm font-bold text-[#0b3d2e] pb-2 border-b border-[#F2ECE2] mb-3 flex items-center gap-2 min-w-0">
                   <Users className="h-5 w-5 text-[#C9A24A] shrink-0" />
-                  <span className="text-sm sm:text-base font-bold text-[#0b3d2e]">Step 2: Traveler Contact Info</span>
+                  <span className="text-sm sm:text-base font-bold text-[#0b3d2e] truncate">Step 2: Traveler Contact Info</span>
                 </div>
 
-                <div className="space-y-3.5">
-                  <div>
+                <div className="space-y-3.5 min-w-0 w-full">
+                  <div className="min-w-0 w-full">
                     <input
                       type="text"
                       placeholder="Your Full Name"
-                      className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                      className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
                       value={clientName}
                       onChange={(e) => setClientName(e.target.value)}
                       required
                       id="quote-fullname-input"
                     />
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-3.5">
+                  <div className="grid sm:grid-cols-2 gap-3.5 min-w-0 w-full">
                     <input
                       type="email"
                       placeholder="Email Address"
-                      className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                      className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
                       value={clientEmail}
                       onChange={(e) => setClientEmail(e.target.value)}
                       required
@@ -1978,7 +1971,7 @@ export default function App() {
                     <input
                       type="text"
                       placeholder="WhatsApp (e.g. +254 720 572 251 or +44...)"
-                      className="w-full bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
+                      className="w-full max-w-full min-w-0 bg-white border border-[#DDD5C7] rounded-lg p-2.5 sm:p-3 text-xs sm:text-sm focus:ring-2 focus:ring-[#C9A24A] focus:outline-none text-[#1a1a1a] shadow-xs"
                       value={clientPhone}
                       onChange={(e) => setClientPhone(e.target.value)}
                       id="quote-whatsapp-input"
@@ -1987,22 +1980,22 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="pt-2 flex gap-4">
+              <div className="pt-2 flex gap-4 w-full min-w-0">
                 <button
                   type="submit"
                   disabled={isLiningUpQuote}
-                  className="flex-1 bg-[#0b3d2e] hover:bg-[#06241c] text-white py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold tracking-wider uppercase transition-all shadow-md border border-[#C9A24A] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                  className="w-full bg-[#0b3d2e] hover:bg-[#06241c] text-white py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold tracking-wider uppercase transition-all shadow-md border border-[#C9A24A] flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
                   id="quote-submit-btn"
                 >
                   {isLiningUpQuote ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Locking in custom rates...
+                      <Loader2 className="h-4 w-4 animate-spin shrink-0" />
+                      <span className="truncate">Locking in custom rates...</span>
                     </>
                   ) : (
                     <>
-                      <Award className="h-4 w-4 text-[#C9A24A]" />
-                      Lock in Official Quote ID & Confirmation
+                      <Award className="h-4 w-4 text-[#C9A24A] shrink-0" />
+                      <span className="truncate">Lock in Official Quote ID & Confirmation</span>
                     </>
                   )}
                 </button>
@@ -2011,37 +2004,37 @@ export default function App() {
             </form>
 
             {/* Live Price estimate & Instant checkout panel */}
-            <div className="lg:col-span-5 space-y-6">
+            <div className="lg:col-span-5 w-full min-w-0 space-y-6">
               
-              <div className="bg-[#FAF8F5] border-2 border-[#C9A24A]/50 rounded-2xl p-4 sm:p-6 shadow-md relative overflow-hidden flex flex-col">
+              <div className="bg-[#FAF8F5] border-2 border-[#C9A24A]/50 rounded-2xl p-3.5 sm:p-6 shadow-md relative overflow-hidden flex flex-col min-w-0 w-full">
                 <div className="absolute top-0 right-0 h-14 w-14 sm:h-16 sm:w-16 bg-[#C9A24A]/10 rounded-bl-3xl flex items-center justify-center text-[#C9A24A]">
                   <Compass className="h-5 w-5 sm:h-6 sm:w-6" />
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 min-w-0">
                   <h4 className="text-xs uppercase tracking-widest font-black text-[#C9A24A]">
                     Live Dynamic Price Engine
                   </h4>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full font-mono shadow-xs">
+                  <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full font-mono shadow-xs shrink-0">
                     Instant Calculation Active
                   </span>
                 </div>
                 
-                <p className="text-xs text-gray-600 mt-2 italic border-l-2 border-[#C9A24A] pl-3 leading-relaxed">
+                <p className="text-xs text-gray-600 mt-2 italic border-l-2 border-[#C9A24A] pl-3 leading-relaxed break-words">
                   "{renderDynamicTextSummary()}"
                 </p>
 
-                <div className="mt-4 space-y-4">
+                <div className="mt-4 space-y-4 min-w-0 w-full">
                   {/* Currency Switcher */}
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Currency:</span>
+                  <div className="flex flex-wrap items-center justify-between gap-2 min-w-0">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider shrink-0">Currency:</span>
                     <div className="bg-[#F3EFE9] p-1 rounded-xl flex gap-1 border border-[#E4DDD3] overflow-x-auto max-w-full">
                       {(['USD', 'KES', 'EUR', 'GBP', 'CAD'] as const).map((curr) => (
                         <button
                           key={curr}
                           type="button"
                           onClick={() => setSelectedCurrency(curr)}
-                          className={`text-[10px] font-black py-1 px-2.5 rounded-lg transition-all tracking-wider text-center cursor-pointer ${
+                          className={`text-[10px] font-black py-1 px-2.5 rounded-lg transition-all tracking-wider text-center cursor-pointer shrink-0 ${
                             selectedCurrency === curr
                               ? "bg-[#0b3d2e] text-[#C9A24A] shadow-xs"
                               : "text-gray-600 hover:text-[#0b3d2e] hover:bg-white/50"
@@ -2054,13 +2047,13 @@ export default function App() {
                   </div>
 
                   {/* Main Price Card */}
-                  <div className="bg-[#FCFAF5] p-3.5 sm:p-4 rounded-xl border border-[#EEE8DF]">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                  <div className="bg-[#FCFAF5] p-3 sm:p-4 rounded-xl border border-[#EEE8DF] min-w-0 w-full">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 min-w-0">
                       <div className="min-w-0">
                         <span className="text-[10px] sm:text-[11px] text-gray-500 uppercase tracking-wider block font-bold leading-tight">
                           Estimated Total ({guestsCount} {guestsCount === 1 ? "Explorer" : "Explorers"} • {duration})
                         </span>
-                        <div className="text-2xl sm:text-3xl font-black text-[#0b3d2e] mt-1">
+                        <div className="text-2xl sm:text-3xl font-black text-[#0b3d2e] mt-1 break-words">
                           {formatConvertedPrice(quoteResponse ? quoteResponse.amount : liveQuote.totalAmount)}
                         </div>
                       </div>
@@ -2072,41 +2065,41 @@ export default function App() {
                       </div>
                     </div>
 
-                    <div className="mt-3 pt-3 border-t border-[#EEE8DF] flex flex-wrap justify-between items-center gap-1.5 text-xs">
+                    <div className="mt-3 pt-3 border-t border-[#EEE8DF] flex flex-wrap justify-between items-center gap-1.5 text-xs min-w-0">
                       <span className="text-gray-600 font-medium">Recommended 35% Deposit:</span>
-                      <span className="font-bold text-[#0b3d2e] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      <span className="font-bold text-[#0b3d2e] bg-amber-50 px-2 py-0.5 rounded border border-amber-200 shrink-0">
                         {formatConvertedPrice(quoteResponse ? Math.round(quoteResponse.amount * 0.35) : liveQuote.deposit)}
                       </span>
                     </div>
 
                     {/* Breakdown details */}
-                    <div className="mt-3 pt-2 border-t border-dashed border-gray-200 text-[10px] text-gray-500 space-y-1.5">
-                      <div className="flex justify-between items-center gap-2">
-                        <span className="truncate">• 4x4 Land Cruiser Safari Fleet ({liveQuote.vehiclesNeeded} veh):</span>
+                    <div className="mt-3 pt-2 border-t border-dashed border-gray-200 text-[10px] text-gray-500 space-y-1.5 min-w-0">
+                      <div className="flex justify-between items-center gap-2 min-w-0">
+                        <span className="truncate">• 4x4 Land Cruiser Fleet ({liveQuote.vehiclesNeeded} veh):</span>
                         <span className="font-medium text-gray-700 font-mono shrink-0">${liveQuote.transportEstimate}</span>
                       </div>
-                      <div className="flex justify-between items-center gap-2">
-                        <span className="truncate">• Park / Conservancy Conservation Permits ({guestsCount} pax):</span>
+                      <div className="flex justify-between items-center gap-2 min-w-0">
+                        <span className="truncate">• Park / Conservation Permits ({guestsCount} pax):</span>
                         <span className="font-medium text-gray-700 font-mono shrink-0">${liveQuote.parkFeeEstimate}</span>
                       </div>
-                      <div className="flex justify-between items-center bg-emerald-50/60 p-1.5 rounded border border-emerald-100 text-emerald-900 gap-2">
-                        <span className="font-medium truncate">• Professional Expedition Crew & Guiding:</span>
+                      <div className="flex justify-between items-center bg-emerald-50/60 p-1.5 rounded border border-emerald-100 text-emerald-900 gap-2 min-w-0">
+                        <span className="font-medium truncate">• Expedition Crew & Guiding:</span>
                         <span className="font-bold text-emerald-800 text-[9px] uppercase tracking-wide shrink-0">✓ All-Inclusive</span>
                       </div>
-                      <div className="flex justify-between items-center bg-amber-50/60 p-1.5 rounded border border-amber-100 text-amber-900 gap-2">
-                        <span className="font-medium truncate">• Accommodation & Meals:</span>
-                        <span className="font-semibold text-[#8F5C38] text-[9px] shrink-0">Self-Arranged (Assistance on Request)</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-amber-50/60 p-1.5 rounded border border-amber-100 text-amber-900 gap-1 sm:gap-2 min-w-0">
+                        <span className="font-medium truncate">• Accommodation & Dining:</span>
+                        <span className="font-semibold text-[#8F5C38] text-[9px] shrink-0">Self-Arranged (Assisted on Request)</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-2 min-w-0 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full min-w-0">
                       <button
                         type="button"
                         onClick={() => setIsMpesaOpen(true)}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-3 rounded-xl text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer active:scale-95"
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-2 sm:px-3 rounded-xl text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer active:scale-95 truncate"
                         id="trigger-mpesa-checkout-modal"
                       >
                         💸 M-Pesa Pay (10 KES Test)
@@ -2115,99 +2108,99 @@ export default function App() {
                       <button
                         type="button"
                         onClick={handleGenerateItinerary}
-                        className="bg-white border hover:bg-gray-50 text-gray-700 font-bold py-3 px-3 rounded-xl text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-1 border-gray-300 cursor-pointer shadow-xs active:scale-95"
+                        className="w-full bg-white border hover:bg-gray-50 text-gray-700 font-bold py-3 px-2 sm:px-3 rounded-xl text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-1 border-gray-300 cursor-pointer shadow-xs active:scale-95 truncate"
                         id="trigger-itinerary-ai-btn"
                       >
-                        <Route className="h-3.5 w-3.5 text-[#C9A24A]" /> AI Itinerary
+                        <Route className="h-3.5 w-3.5 text-[#C9A24A] shrink-0" /> <span className="truncate">AI Itinerary</span>
                       </button>
 
                       <a
                         href={`https://wa.me/254720572251?text=${getWhatsAppMessage(true)}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="sm:col-span-2 bg-[#25D366] hover:bg-[#20ba5c] text-white font-extrabold py-3.5 px-4 rounded-xl text-xs sm:text-sm tracking-wider uppercase transition-all duration-150 flex items-center justify-center gap-2 shadow-md hover:scale-[1.01] active:scale-[0.99] cursor-pointer mt-1"
+                        className="w-full sm:col-span-2 bg-[#25D366] hover:bg-[#20ba5c] text-white font-extrabold py-3.5 px-3 sm:px-4 rounded-xl text-xs sm:text-sm tracking-wider uppercase transition-all duration-150 flex items-center justify-center gap-2 shadow-md hover:scale-[1.01] active:scale-[0.99] cursor-pointer mt-1 text-center"
                         id="trigger-whatsapp-confirm-btn"
                       >
                         💬 Confirm & Inquire on WhatsApp ({guestsCount} Pax)
                       </a>
                     </div>
 
-                    <div className="mt-4 pt-3.5 border-t border-[#E8DEC8] space-y-2.5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px]">
-                        <span className="font-bold text-[#0b3d2e] uppercase tracking-wider flex items-center gap-1.5">
+                    <div className="mt-4 pt-3.5 border-t border-[#E8DEC8] space-y-2.5 min-w-0 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] min-w-0">
+                        <span className="font-bold text-[#0b3d2e] uppercase tracking-wider flex items-center gap-1.5 shrink-0">
                           <ShieldCheck className="h-4 w-4 text-[#C9A24A] shrink-0" />
                           Accepted Payment Modes:
                         </span>
-                        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 self-start sm:self-auto flex items-center gap-1">
+                        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 self-start sm:self-auto flex items-center gap-1 shrink-0">
                           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           Verified Direct Settlement
                         </span>
                       </div>
 
                       {/* Premium Payment Logos Grid */}
-                      <div className="grid grid-cols-5 gap-1.5 sm:gap-2 pt-0.5">
+                      <div className="grid grid-cols-5 gap-1 sm:gap-2 pt-0.5 w-full min-w-0">
                         {/* M-PESA */}
                         <div 
-                          className="bg-gradient-to-b from-white to-[#F6FDF8] border border-emerald-400/60 hover:border-emerald-500 rounded-lg py-2 px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center" 
+                          className="bg-gradient-to-b from-white to-[#F6FDF8] border border-emerald-400/60 hover:border-emerald-500 rounded-lg py-1.5 px-0.5 sm:py-2 sm:px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center min-w-0 overflow-hidden" 
                           title="Lipa Na M-Pesa (Kenya Instant Mobile Money)"
                         >
-                          <div className="flex items-center justify-center gap-1">
+                          <div className="flex items-center justify-center gap-0.5 sm:gap-1 max-w-full">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#00A859] shrink-0" />
-                            <span className="text-[10px] sm:text-xs font-black tracking-tight text-[#00A859] font-sans leading-none">M-PESA</span>
+                            <span className="text-[8px] sm:text-xs font-black tracking-tight text-[#00A859] font-sans leading-none truncate">M-PESA</span>
                           </div>
-                          <span className="hidden sm:block text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase">Safaricom</span>
+                          <span className="text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase truncate max-w-full">Safaricom</span>
                         </div>
 
                         {/* VISA */}
                         <div 
-                          className="bg-gradient-to-b from-white to-blue-50/40 border border-blue-200 hover:border-blue-400 rounded-lg py-2 px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center" 
+                          className="bg-gradient-to-b from-white to-blue-50/40 border border-blue-200 hover:border-blue-400 rounded-lg py-1.5 px-0.5 sm:py-2 sm:px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center min-w-0 overflow-hidden" 
                           title="Visa International Debit & Credit"
                         >
-                          <span className="text-[11px] sm:text-xs font-black italic tracking-wider text-[#1A1F71] font-sans leading-none">
+                          <span className="text-[9px] sm:text-xs font-black italic tracking-wider text-[#1A1F71] font-sans leading-none truncate">
                             VISA
                           </span>
-                          <span className="hidden sm:block text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase">Global</span>
+                          <span className="text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase truncate max-w-full">Global</span>
                         </div>
 
                         {/* MASTERCARD */}
                         <div 
-                          className="bg-gradient-to-b from-white to-amber-50/40 border border-amber-200 hover:border-amber-400 rounded-lg py-2 px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center" 
+                          className="bg-gradient-to-b from-white to-amber-50/40 border border-amber-200 hover:border-amber-400 rounded-lg py-1.5 px-0.5 sm:py-2 sm:px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center min-w-0 overflow-hidden" 
                           title="Mastercard Global Secured Checkout"
                         >
-                          <div className="flex items-center justify-center -space-x-1">
-                            <div className="w-3.5 h-3.5 rounded-full bg-[#EB001B] opacity-90" />
-                            <div className="w-3.5 h-3.5 rounded-full bg-[#F79E1B] opacity-90" />
+                          <div className="flex items-center justify-center -space-x-1 shrink-0">
+                            <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#EB001B] opacity-90" />
+                            <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#F79E1B] opacity-90" />
                           </div>
-                          <span className="hidden sm:block text-[7px] text-gray-500 font-mono mt-0.5 font-bold uppercase">Master</span>
+                          <span className="text-[7px] text-gray-500 font-mono mt-0.5 font-bold uppercase truncate max-w-full">Master</span>
                         </div>
 
                         {/* AMERICAN EXPRESS */}
                         <div 
-                          className="bg-gradient-to-b from-white to-sky-50/40 border border-sky-200 hover:border-sky-400 rounded-lg py-2 px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center" 
+                          className="bg-gradient-to-b from-white to-sky-50/40 border border-sky-200 hover:border-sky-400 rounded-lg py-1.5 px-0.5 sm:py-2 sm:px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center min-w-0 overflow-hidden" 
                           title="American Express Card"
                         >
-                          <span className="text-[9px] sm:text-[10px] font-black tracking-tight text-[#006FCF] font-sans bg-[#006FCF]/10 px-1 py-0.5 rounded leading-none">
+                          <span className="text-[8px] sm:text-[10px] font-black tracking-tight text-[#006FCF] font-sans bg-[#006FCF]/10 px-0.5 sm:px-1 py-0.5 rounded leading-none truncate">
                             AMEX
                           </span>
-                          <span className="hidden sm:block text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase">Secure</span>
+                          <span className="text-[7px] text-gray-400 font-mono mt-0.5 font-bold uppercase truncate max-w-full">Secure</span>
                         </div>
 
                         {/* BANK WIRE / SWIFT */}
                         <div 
-                          className="bg-gradient-to-b from-white to-emerald-50/40 border border-[#C9A24A]/40 hover:border-[#C9A24A] rounded-lg py-2 px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center" 
+                          className="bg-gradient-to-b from-white to-emerald-50/40 border border-[#C9A24A]/40 hover:border-[#C9A24A] rounded-lg py-1.5 px-0.5 sm:py-2 sm:px-1 flex flex-col items-center justify-center shadow-xs transition-transform hover:scale-105 cursor-pointer text-center min-w-0 overflow-hidden" 
                           title="Direct International Bank Wire / SWIFT / RTGS Transfer"
                         >
-                          <span className="text-[9px] sm:text-[10px] font-black tracking-tight text-[#0b3d2e] font-mono leading-none">
+                          <span className="text-[8px] sm:text-[10px] font-black tracking-tight text-[#0b3d2e] font-mono leading-none truncate">
                             SWIFT
                           </span>
-                          <span className="hidden sm:block text-[7px] text-[#C9A24A] font-mono mt-0.5 font-bold uppercase">Wire TRF</span>
+                          <span className="text-[7px] text-[#C9A24A] font-mono mt-0.5 font-bold uppercase truncate max-w-full">Wire TRF</span>
                         </div>
                       </div>
 
                       {/* Security note */}
-                      <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] text-gray-500 font-mono pt-1">
-                        <span className="flex items-center gap-1">🔒 256-Bit SSL Encrypted</span>
-                        <span className="flex items-center gap-1">⚡ Zero Surcharge Guarantee</span>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 text-[10px] text-gray-500 font-mono pt-1 min-w-0">
+                        <span className="flex items-center gap-1 shrink-0">🔒 256-Bit SSL Encrypted</span>
+                        <span className="flex items-center gap-1 shrink-0">⚡ Zero Surcharge Guarantee</span>
                       </div>
                     </div>
                   </div>
