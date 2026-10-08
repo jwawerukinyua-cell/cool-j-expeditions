@@ -434,9 +434,28 @@ app.post("/api/reviews", (req, res) => {
 });
 
 // 2B. EXPEDITION FIELD STORIES & ARTICLES (Guest & Admin Vetted Pipeline)
+// Confidential Staff Authorization PIN (can be configured via STAFF_PORTAL_PIN env variable)
+const getStaffPin = (): string => {
+  return (process.env.STAFF_PORTAL_PIN || "8492").trim();
+};
+
+// PIN Verification Endpoint (ensures PIN is never exposed to visitors or client bundles)
+app.post("/api/articles/verify-pin", (req, res) => {
+  const { pin } = req.body || {};
+  const currentPin = getStaffPin();
+  if (pin && typeof pin === "string" && pin.trim() === currentPin) {
+    return res.json({ valid: true });
+  }
+  return res.status(401).json({ 
+    valid: false, 
+    error: "Invalid Authorization PIN. Access restricted to authorized Cool J staff." 
+  });
+});
+
 app.get("/api/articles", (req, res) => {
   const { includeAll, pin } = req.query;
-  const isAuthorized = pin === "2026" || pin === "coolj2026";
+  const currentPin = getStaffPin();
+  const isAuthorized = typeof pin === "string" && pin.trim() === currentPin;
 
   if (includeAll === "true" && isAuthorized) {
     // Return all articles (including pending & rejected) for authenticated admin
@@ -461,8 +480,9 @@ app.post("/api/articles", (req, res) => {
   let validatedType: "guest" | "guide" | "admin" = "guest";
   let status: "pending" | "approved" = "pending";
 
+  const currentPin = getStaffPin();
   if (authorType === "admin" || authorType === "guide") {
-    if (adminPin === "2026" || adminPin === "coolj2026") {
+    if (adminPin && typeof adminPin === "string" && adminPin.trim() === currentPin) {
       validatedType = authorType;
       status = "approved"; // Admin/guide posts with valid PIN are published immediately
     } else {
@@ -512,8 +532,9 @@ app.post("/api/articles", (req, res) => {
 app.patch("/api/articles/:id/status", (req, res) => {
   const { id } = req.params;
   const { pin, status, isFeatured } = req.body;
+  const currentPin = getStaffPin();
 
-  if (pin !== "2026" && pin !== "coolj2026") {
+  if (!pin || typeof pin !== "string" || pin.trim() !== currentPin) {
     return res.status(401).json({ error: "Unauthorized: Invalid admin authorization PIN" });
   }
 
@@ -540,8 +561,9 @@ app.patch("/api/articles/:id/status", (req, res) => {
 app.delete("/api/articles/:id", (req, res) => {
   const { id } = req.params;
   const pin = req.body?.pin || req.query?.pin || req.headers["x-admin-pin"];
+  const currentPin = getStaffPin();
 
-  if (pin !== "2026" && pin !== "coolj2026") {
+  if (!pin || typeof pin !== "string" || pin.trim() !== currentPin) {
     return res.status(401).json({ error: "Unauthorized: Invalid admin authorization PIN" });
   }
 

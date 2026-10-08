@@ -26,7 +26,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Eye,
-  Star
+  Star,
+  Loader2
 } from "lucide-react";
 import { FieldStory } from "../types";
 
@@ -56,6 +57,7 @@ export default function FieldStoriesSection({
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [adminLoginPin, setAdminLoginPin] = useState<string>("");
   const [adminLoginError, setAdminLoginError] = useState<string>("");
+  const [isValidatingPin, setIsValidatingPin] = useState<boolean>(false);
   const [verifiedAdminPin, setVerifiedAdminPin] = useState<string>("");
   const [moderationNotice, setModerationNotice] = useState<string | null>(null);
   const [processingStoryId, setProcessingStoryId] = useState<string | null>(null);
@@ -165,7 +167,7 @@ export default function FieldStoriesSection({
     }
 
     if ((authorType === "admin" || authorType === "guide") && !adminPin) {
-      setSubmitError("Please enter the Guide / Admin verification PIN (e.g. 2026) to publish with this badge.");
+      setSubmitError("Please enter a valid Lead Guide / Staff authorization PIN to publish with this badge.");
       return;
     }
 
@@ -230,23 +232,43 @@ export default function FieldStoriesSection({
     }
   };
 
-  // Admin Portal Login
+  // Admin Portal Login (Secured via Server-Side Verification)
   const handleAdminLogin = async (e: FormEvent) => {
     e.preventDefault();
     setAdminLoginError("");
 
-    if (adminLoginPin !== "2026" && adminLoginPin !== "coolj2026") {
-      setAdminLoginError("Invalid PIN. Please enter the authorized Cool J staff PIN (e.g. 2026).");
+    const trimmedPin = adminLoginPin.trim();
+    if (!trimmedPin) {
+      setAdminLoginError("Please enter your staff authorization PIN.");
       return;
     }
 
-    setVerifiedAdminPin(adminLoginPin);
-    setIsAdminMode(true);
-    setIsAdminModalOpen(false);
-    setAdminLoginPin("");
-    await loadStories(adminLoginPin);
-    setModerationNotice("Admin Vetting Portal Unlocked: You can now review pending guest submissions, approve, feature, or delete posts.");
-    setTimeout(() => setModerationNotice(null), 6000);
+    setIsValidatingPin(true);
+    try {
+      const res = await fetch("/api/articles/verify-pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: trimmedPin }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.valid) {
+        setAdminLoginError(data.error || "Invalid Authorization PIN. Access restricted to authorized Cool J staff.");
+        return;
+      }
+
+      setVerifiedAdminPin(trimmedPin);
+      setIsAdminMode(true);
+      setIsAdminModalOpen(false);
+      setAdminLoginPin("");
+      await loadStories(trimmedPin);
+      setModerationNotice("Staff Vetting Portal Unlocked: You can now review pending guest submissions, approve, feature, or delete posts.");
+      setTimeout(() => setModerationNotice(null), 6000);
+    } catch {
+      setAdminLoginError("Unable to verify authorization PIN at this time. Please try again.");
+    } finally {
+      setIsValidatingPin(false);
+    }
   };
 
   const handleAdminLogout = () => {
@@ -797,19 +819,19 @@ export default function FieldStoriesSection({
             </div>
 
             <p className="text-xs text-gray-600 leading-relaxed mb-5">
-              Enter the Cool J Expeditions staff PIN to review and vet guest stories before they go live, publish official dispatches, or manage the expedition feed.
+              Enter your confidential staff authorization PIN to review and vet guest stories before they go live, publish official dispatches, or manage the expedition feed.
             </p>
 
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[#0B3D2E] uppercase tracking-wider mb-1.5">
-                  Authorization PIN (e.g. 2026)
+                  Authorization PIN
                 </label>
                 <input
                   type="password"
                   autoFocus
                   required
-                  placeholder="Enter 4-digit PIN (2026)"
+                  placeholder="Enter staff authorization PIN"
                   value={adminLoginPin}
                   onChange={(e) => setAdminLoginPin(e.target.value)}
                   className="w-full bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl p-3 text-sm font-mono text-center tracking-widest text-[#0B3D2E] focus:outline-none focus:ring-2 focus:ring-[#C9A24A]"
@@ -833,10 +855,15 @@ export default function FieldStoriesSection({
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#0B3D2E] hover:bg-[#124D3C] text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow transition-all cursor-pointer flex items-center gap-1.5"
+                  disabled={isValidatingPin}
+                  className="bg-[#0B3D2E] hover:bg-[#124D3C] text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
                 >
-                  <Unlock className="h-3.5 w-3.5 text-[#C9A24A]" />
-                  <span>Unlock Vetting Mode</span>
+                  {isValidatingPin ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin text-[#C9A24A]" />
+                  ) : (
+                    <Unlock className="h-3.5 w-3.5 text-[#C9A24A]" />
+                  )}
+                  <span>{isValidatingPin ? "Verifying..." : "Unlock Vetting Mode"}</span>
                 </button>
               </div>
             </form>
@@ -1136,11 +1163,11 @@ export default function FieldStoriesSection({
                     <label className="text-xs font-bold text-amber-900">
                       🔐 Lead Guide & Admin Passcode
                     </label>
-                    <span className="text-[10px] text-amber-700/80 font-mono">Restricted to Cool J Staff (e.g. 2026)</span>
+                    <span className="text-[10px] text-amber-700/80 font-medium">Restricted to Authorized Staff</span>
                   </div>
                   <input
                     type="password"
-                    placeholder="Enter private authorization PIN (e.g. 2026)"
+                    placeholder="Enter private authorization PIN"
                     value={adminPin}
                     onChange={(e) => setAdminPin(e.target.value)}
                     className="w-full bg-white border border-amber-300 rounded-lg p-2.5 text-xs font-mono text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A24A]"
