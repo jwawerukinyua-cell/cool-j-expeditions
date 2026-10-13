@@ -50,15 +50,17 @@ import QuickSupport from "./components/QuickSupport";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 
 // Import authentic team and climber photo assets
-import teamShiptons from "./assets/images/Trekking Team Resting.jpg";
-import coolJGuide from "./assets/images/John Mwangi M. (Cool J).jpg";
-import climberSunset from "./assets/images/Mt Kenya Summit (Hero banner).jpg";
-import groupCustomers from "./assets/images/Happy Group of Climbers.jpg";
-import lenanaPeak from "./assets/images/Point Lenana Peak Sign.jpg";
-import coolJLogoBlackImg from "./assets/images/logo black.jpg";
+import teamShiptons from "./assets/images/trekking-team-resting.jpg";
+import coolJGuide from "./assets/images/cool-j.jpg";
+import coolJClean from "./assets/images/cool-j.jpg";
+import climberSunset from "./assets/images/mt-kenya-summit.jpg";
+import groupCustomers from "./assets/images/happy-group-of-climbers.jpg";
+import lenanaPeak from "./assets/images/point-lenana-peak-sign.jpg";
+import coolJLogoBlackImg from "./assets/images/logo-black.jpg";
 import kilimanjaroTanzania from "./assets/images/mount-kilimanjaro-.jpg";
-import mfalmeUkweliPortrait from "./assets/images/mfalme ukweli.png";
+import mfalmeUkweliPortrait from "./assets/images/mfalme-ukweli.png";
 import rodaPortrait from "./assets/images/rodah_reviewer_1783348521900.jpg";
+import ebolaImg from "./assets/images/ebola-virus.jpg";
 import ugandaBwindiImg from "./assets/images/uganda_bwindi_1783435198714.jpg";
 import fleetSavanna from "./assets/images/fleet-savanna.jpg";
 import fleetInterior from "./assets/images/fleet-interior.jpg";
@@ -69,6 +71,8 @@ import takingRestInSamburu from "./assets/images/taking_a_rest_in_samburu.jpg";
 import walkWithRanger from "./assets/images/walk_with_ranger.jpg";
 import elephantTakingAWalk from "./assets/images/elephant_taking_a_walk.jpg";
 import happyGuests from "./assets/images/happy_guests.jpg";
+
+const coolJFounderPhoto = coolJClean || coolJGuide || "/assets/images/cool-j.jpg";
 
 const DEFAULT_REVIEWS: Review[] = [
   {
@@ -161,6 +165,7 @@ export default function App() {
   // UI state
   const [isLiningUpQuote, setIsLiningUpQuote] = useState(false);
   const [quoteResponse, setQuoteResponse] = useState<BookingResponse | null>(null);
+  const [quoteValidationMsg, setQuoteValidationMsg] = useState("");
   const [isGeneratingItinerary, setIsGeneratingItinerary] = useState(false);
   const [generatedItinerary, setGeneratedItinerary] = useState<string>("");
   const [itineraryError, setItineraryError] = useState("");
@@ -382,6 +387,39 @@ export default function App() {
     ];
   };
 
+  // Helper function: Land Cruiser rates range from $250 to $350/day depending on destination distance and terrain
+  const getLandCruiserDailyRate = (regionName: string): number => {
+    const reg = (regionName || "").toLowerCase();
+    // Deep cross-border / regional East Africa long-haul expeditions ($350/day)
+    if (reg.includes("uganda") || reg.includes("gorilla") || reg.includes("bwindi")) return 350;
+    if (reg.includes("tanzania") || reg.includes("kilimanjaro") || reg.includes("serengeti")) return 350;
+    if (reg.includes("combo") || reg.includes("multi-country") || reg.includes("cross-border")) return 350;
+
+    // Iconic premier savanna reserves & southern parks ($320 - $340/day)
+    if (reg.includes("masai mara") || reg.includes("safaris") || reg.includes("mara")) return 340;
+    if (reg.includes("tsavo")) return 320;
+    if (reg.includes("diani") || reg.includes("coast")) return 320;
+    if (reg.includes("amboseli")) return 320;
+
+    // Northern frontier & Rift Valley mid-distance reserves ($280 - $290/day)
+    if (reg.includes("meru") || reg.includes("elsa")) return 290;
+    if (reg.includes("samburu") || reg.includes("buffalo springs") || reg.includes("shaba")) return 290;
+    if (reg.includes("lewa") || reg.includes("borana")) return 280;
+    if (reg.includes("nakuru") || reg.includes("naivasha") || reg.includes("hell's gate")) return 280;
+
+    // Mountain & high-plateau foothills ($260 - $270/day)
+    if (reg.includes("aberdare")) return 270;
+    if (reg.includes("lolldaiga")) return 260;
+
+    // Local Laikipia base & direct access ($250/day)
+    if (reg.includes("solio")) return 250;
+    if (reg.includes("ngare ndare") || reg.includes("canopy") || reg.includes("waterfall")) return 250;
+    if (reg.includes("ol pejeta") || reg.includes("sweetwaters") || reg.includes("nanyuki") || reg.includes("laikipia")) return 250;
+    if (reg.includes("mount kenya") || reg.includes("lenana") || reg.includes("sirimon") || reg.includes("chogoria")) return 250;
+
+    return 280; // Standard East Africa destination fallback
+  };
+
   // Real-time live estimate calculation engine (Dynamic instant calculation)
   // Accommodations and meals are self-arranged by default (available on request), and crew fees are bundled all-inclusive
   const liveQuote = useMemo(() => {
@@ -399,13 +437,14 @@ export default function App() {
     const vehiclesNeeded = Math.ceil(numGuests / 6);
     const regLower = (region || "").toLowerCase();
     const durLower = (duration || "").toLowerCase();
+    const cruiserDailyRate = getLandCruiserDailyRate(region);
 
     let parkFeeEstimate = 0;
     let transportEstimate = 0;
 
     if (regLower.includes("ngare ndare") || regLower.includes("canopy") || regLower.includes("waterfall")) {
       const entryFeePerDay = 40;
-      const cruiserRatePerDay = 170;
+      const cruiserRatePerDay = cruiserDailyRate; // $250
       const inclusiveCrewPerDay = 45;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -415,7 +454,7 @@ export default function App() {
 
     } else if (regLower.includes("solio")) {
       const entryFeePerDay = 80;
-      const cruiserRatePerDay = 180;
+      const cruiserRatePerDay = cruiserDailyRate; // $250
       const inclusiveCrewPerDay = 45;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -425,7 +464,7 @@ export default function App() {
 
     } else if (regLower.includes("aberdare")) {
       const entryFeePerDay = 52;
-      const cruiserRatePerDay = 180;
+      const cruiserRatePerDay = cruiserDailyRate; // $270
       const inclusiveCrewPerDay = 45;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -435,7 +474,7 @@ export default function App() {
 
     } else if (regLower.includes("lolldaiga")) {
       const entryFeePerDay = 50;
-      const cruiserRatePerDay = 170;
+      const cruiserRatePerDay = cruiserDailyRate; // $260
       const inclusiveCrewPerDay = 45;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -445,7 +484,7 @@ export default function App() {
 
     } else if (regLower.includes("meru national park") || regLower.includes("elsa")) {
       const entryFeePerDay = 60;
-      const cruiserRatePerDay = 190;
+      const cruiserRatePerDay = cruiserDailyRate; // $290
       const inclusiveCrewPerDay = 50;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -455,7 +494,7 @@ export default function App() {
 
     } else if (regLower.includes("samburu") || regLower.includes("buffalo springs") || regLower.includes("shaba")) {
       const entryFeePerDay = 80;
-      const cruiserRatePerDay = 190;
+      const cruiserRatePerDay = cruiserDailyRate; // $290
       const inclusiveCrewPerDay = 50;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -465,7 +504,7 @@ export default function App() {
 
     } else if (regLower.includes("lewa") || regLower.includes("borana")) {
       const entryFeePerDay = 130;
-      const cruiserRatePerDay = 200;
+      const cruiserRatePerDay = cruiserDailyRate; // $280
       const inclusiveCrewPerDay = 60;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -475,7 +514,7 @@ export default function App() {
 
     } else if (regLower.includes("nakuru") || regLower.includes("naivasha") || regLower.includes("hell's gate")) {
       const entryFeePerDay = 70;
-      const cruiserRatePerDay = 180;
+      const cruiserRatePerDay = cruiserDailyRate; // $280
       const inclusiveCrewPerDay = 45;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -485,7 +524,7 @@ export default function App() {
 
     } else if (regLower.includes("amboseli")) {
       const entryFeePerDay = 100;
-      const cruiserRatePerDay = 200;
+      const cruiserRatePerDay = cruiserDailyRate; // $320
       const inclusiveCrewPerDay = 50;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -495,7 +534,7 @@ export default function App() {
 
     } else if (regLower.includes("tsavo")) {
       const entryFeePerDay = 52;
-      const cruiserRatePerDay = 200;
+      const cruiserRatePerDay = cruiserDailyRate; // $320
       const inclusiveCrewPerDay = 50;
 
       parkFeeEstimate = entryFeePerDay * parsingDays * numGuests;
@@ -504,10 +543,10 @@ export default function App() {
       totalAmount = Math.ceil(parkFeeEstimate + transportEstimate + bundledCrew);
 
     } else if (regLower.includes("diani") || regLower.includes("coast")) {
-      const transferPerGuest = 60;
+      const cruiserRatePerDay = cruiserDailyRate; // $320
       const inclusiveCrewPerDay = 35;
 
-      transportEstimate = transferPerGuest * numGuests;
+      transportEstimate = cruiserRatePerDay * parsingDays * vehiclesNeeded;
       const bundledCrew = inclusiveCrewPerDay * parsingDays;
       totalAmount = Math.ceil(transportEstimate + bundledCrew);
 
@@ -526,12 +565,13 @@ export default function App() {
 
       const bundledCrewAndLogistics = Math.ceil(baseRatePerDay * parsingDays * numGuests * budgetMultiplier);
       parkFeeEstimate = Math.ceil(parkFeesPerDay * parsingDays * numGuests);
-      transportEstimate = Math.ceil(90 * vehiclesNeeded);
+      // Dedicated 4x4 Land Cruiser mountain trailhead transfer & rugged track access ($250 per vehicle)
+      transportEstimate = Math.ceil(cruiserDailyRate * vehiclesNeeded);
       totalAmount = bundledCrewAndLogistics + parkFeeEstimate + transportEstimate;
 
     } else if (regLower.includes("nanyuki") || regLower.includes("laikipia") || regLower.includes("ol pejeta")) {
       const entryFeePerDay = 110;
-      const cruiserVehicleRatePerDay = 180;
+      const cruiserVehicleRatePerDay = cruiserDailyRate; // $250
       const inclusiveCrewPerDay = 50;
 
       parkFeeEstimate = Math.ceil(entryFeePerDay * parsingDays * numGuests);
@@ -541,7 +581,7 @@ export default function App() {
 
     } else if (regLower.includes("masai mara") || regLower.includes("safaris")) {
       const maraEntryFeePerDay = 150;
-      const cruiserVehicleRatePerDay = 220;
+      const cruiserVehicleRatePerDay = cruiserDailyRate; // $340
       const inclusiveCrewPerDay = 55;
 
       parkFeeEstimate = Math.ceil(maraEntryFeePerDay * parsingDays * numGuests);
@@ -563,12 +603,13 @@ export default function App() {
 
       const bundledCrewAndLogistics = Math.ceil(baseCrewRatePerDay * parsingDays * numGuests * budgetMultiplier);
       parkFeeEstimate = Math.ceil(parkFeesPerDay * parsingDays * numGuests);
-      transportEstimate = Math.ceil(150 * vehiclesNeeded);
+      // Cross-border expedition 4x4 cruiser transfer & trailhead support ($350)
+      transportEstimate = Math.ceil(cruiserDailyRate * vehiclesNeeded);
       totalAmount = bundledCrewAndLogistics + parkFeeEstimate + transportEstimate;
 
     } else if (regLower.includes("uganda") || regLower.includes("gorilla")) {
       const gorillaPermitCost = 800;
-      const cruiserVehicleRatePerDay = 200;
+      const cruiserVehicleRatePerDay = cruiserDailyRate; // $350
       const localRangerGuidePerDay = 50;
 
       parkFeeEstimate = gorillaPermitCost * numGuests;
@@ -578,7 +619,7 @@ export default function App() {
     } else if (regLower.includes("combo") || regLower.includes("multi-country") || durLower.includes("combo")) {
       // Uganda & Tanzania or Multi-Country Cross-Border Combo
       const permitAndParkDaily = 220;
-      const cruiserVehicleRatePerDay = 220;
+      const cruiserVehicleRatePerDay = cruiserDailyRate; // $350
       const inclusiveCrewPerDay = 60;
 
       parkFeeEstimate = Math.ceil(permitAndParkDaily * Math.min(parsingDays, 4) * numGuests);
@@ -598,7 +639,7 @@ export default function App() {
       else if (numGuests >= 16) groupFactor = 0.68;
 
       parkFeeEstimate = Math.ceil(120 * parsingDays * numGuests);
-      transportEstimate = Math.ceil(180 * parsingDays * vehiclesNeeded);
+      transportEstimate = Math.ceil(cruiserDailyRate * parsingDays * vehiclesNeeded);
       totalAmount = Math.ceil(baseDailyRatePerPerson * parsingDays * numGuests * groupFactor);
     }
 
@@ -615,7 +656,8 @@ export default function App() {
       deposit,
       vehiclesNeeded,
       parkFeeEstimate,
-      transportEstimate
+      transportEstimate,
+      cruiserDailyRate
     };
   }, [region, activity, duration, budget, guestsCount]);
 
@@ -675,9 +717,10 @@ export default function App() {
   const handleQuoteSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!clientName || !clientEmail) {
-      alert("Name and email are mandatory for Cool J to formulate custom travel arrangements.");
+      setQuoteValidationMsg("Name and email are mandatory for Cool J to formulate custom travel arrangements.");
       return;
     }
+    setQuoteValidationMsg("");
     setIsLiningUpQuote(true);
 
     try {
@@ -745,7 +788,7 @@ export default function App() {
   const handleReviewSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!newReviewName || !newReviewText) {
-      alert("Please provide both name and review details.");
+      setReviewMessage("Please provide both your name and review details to post.");
       return;
     }
     setIsSubmittingReview(true);
@@ -1021,6 +1064,10 @@ export default function App() {
           alt="Expedition Background"
           className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay pointer-events-none z-0"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = "/assets/images/mt-kenya-summit.jpg";
+          }}
         />
         
         <div className="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-12 gap-12 items-center">
@@ -1073,6 +1120,10 @@ export default function App() {
                 alt="Cool J and climber celebrating on Mt Kenya summit at golden sunset"
                 className="w-full h-full object-cover aspect-[4/3] opacity-95 transition-transform duration-700"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/assets/images/mt-kenya-summit.jpg";
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent flex flex-col justify-end p-6">
                 <h3 className="font-serif font-extrabold text-lg sm:text-xl text-white">
@@ -1190,6 +1241,22 @@ export default function App() {
                   alt={exp.keyword} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    if (exp.id === "ol-pejeta" || exp.id === "tsavo-east-west") {
+                      e.currentTarget.src = "/assets/images/fleet-savanna.jpg";
+                    } else if (exp.id === "lewa-borana") {
+                      e.currentTarget.src = "/assets/images/fleet-paved.jpg";
+                    } else if (exp.id === "meru-national-park") {
+                      e.currentTarget.src = "/assets/images/fleet-interior.jpg";
+                    } else if (exp.id === "mount-kenya") {
+                      e.currentTarget.src = "/assets/images/mt-kenya-summit.jpg";
+                    } else if (typeof exp.imagePlaceholder === "string" && exp.imagePlaceholder.startsWith("/")) {
+                      e.currentTarget.src = exp.imagePlaceholder;
+                    } else {
+                      e.currentTarget.src = "/assets/images/mt-kenya-summit.jpg";
+                    }
+                  }}
                 />
                 
                 {/* Floating category tag */}
@@ -1316,6 +1383,10 @@ export default function App() {
                   alt="Point Lenana 4985m summit peak Mount Kenya" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/assets/images/point-lenana-peak-sign.jpg";
+                  }}
                 />
                 <span className="absolute top-4 left-4 bg-[#0b3d2e] text-[#C9A24A] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
                   Kenya
@@ -1351,6 +1422,10 @@ export default function App() {
                   alt="Shipton's Camp and Sirimon mountain route Mount Kenya" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/assets/images/trekking-team-resting.jpg";
+                  }}
                 />
                 <span className="absolute top-4 left-4 bg-[#0b3d2e] text-[#C9A24A] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
                   Kenya
@@ -1386,6 +1461,10 @@ export default function App() {
                   alt="Mount Kilimanjaro peak in Tanzania" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/assets/images/mount-kilimanjaro-.jpg";
+                  }}
                 />
                 <span className="absolute top-4 left-4 bg-[#0b3d2e] text-[#C9A24A] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
                   Tanzania
@@ -1421,6 +1500,10 @@ export default function App() {
                   alt="Mountain Gorilla tracking in Bwindi Impenetrable Forest Uganda" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/assets/images/uganda_bwindi_1783435198714.jpg";
+                  }}
                 />
                 <span className="absolute top-4 left-4 bg-[#0b3d2e] text-[#C9A24A] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
                   Uganda
@@ -1534,6 +1617,18 @@ export default function App() {
                     alt="Cool J custom safari vehicle fleet"
                     className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105"
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      if (fleetActiveTab === "interior") {
+                        e.currentTarget.src = "/assets/images/fleet-interior.jpg";
+                      } else if (fleetActiveTab === "paved") {
+                        e.currentTarget.src = "/assets/images/fleet-paved.jpg";
+                      } else if (fleetActiveTab === "savanna") {
+                        e.currentTarget.src = "/assets/images/fleet-savanna.jpg";
+                      } else {
+                        e.currentTarget.src = "/assets/images/fleet-tourists-enjoying.jpg";
+                      }
+                    }}
                   />
                   <div className="absolute bottom-3 left-3 right-3 bg-[#0b3d2e]/95 backdrop-blur-sm text-white p-3 rounded-lg flex flex-col gap-1 text-xs shadow-lg">
                     <p className="font-bold text-[#C9A24A]">
@@ -1858,7 +1953,62 @@ export default function App() {
                   <div className="leading-relaxed text-[11px] sm:text-xs min-w-0 break-words">
                     <span className="font-bold text-[#0b3d2e]">Accommodation & Dining: </span>
                     Most of our international travelers have their own accommodations and meal plans sorted according to personal preferences. 
-                    <span className="font-bold text-[#8F5C38]"> Need us to take care of it?</span> Cool J and the team can gladly book curated luxury safari lodges, wilderness eco-camps, or mountain huts upon request at direct local partner rates!
+                    <span className="font-bold text-[#8F5C38]"> Need us to take care of it?</span> Cool J and the team can gladly book curated luxury safari lodges, wilderness eco-camps, or Airbnbs upon request at direct local partner rates!
+                  </div>
+                </div>
+
+                {/* East Africa Health & Visitor Safety Note (by Mfalme Ukweli, Cool J Expeditions Team) */}
+                <div className="sm:col-span-2 min-w-0 w-full bg-[#F3F8F5] border-2 border-emerald-700/25 rounded-xl p-3.5 sm:p-4 text-xs text-gray-800 shadow-xs relative overflow-hidden">
+                  <div className="flex flex-col sm:flex-row items-start gap-3">
+                    <div className="flex items-center gap-2 sm:flex-col sm:items-center shrink-0">
+                      <img
+                        src={ebolaImg || "/assets/images/ebola-virus.jpg"}
+                        alt="Ebola Virus Scientific Visualization"
+                        referrerPolicy="no-referrer"
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover border border-emerald-600/40 shadow-xs shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "/assets/images/ebola-virus.jpg";
+                        }}
+                      />
+                      <div className="flex items-center gap-1.5 sm:mt-1">
+                        <img
+                          src={mfalmeUkweliPortrait || "/assets/images/mfalme-ukweli.png"}
+                          alt="Mfalme Ukweli"
+                          referrerPolicy="no-referrer"
+                          className="w-6 h-6 rounded-full object-cover border border-[#C9A24A]"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/assets/images/mfalme-ukweli.png";
+                          }}
+                        />
+                        <span className="text-[10px] font-bold text-[#0b3d2e] sm:hidden">Mfalme Ukweli</span>
+                      </div>
+                    </div>
+
+                    <div className="leading-relaxed text-[11px] sm:text-xs min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="bg-emerald-900 text-[#C9A24A] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider font-mono">
+                          Official Health & Travel Note
+                        </span>
+                        <span className="text-[10px] text-emerald-900 font-bold">
+                          By Mfalme Ukweli (Team Member, Cool J Expeditions)
+                        </span>
+                      </div>
+                      <p className="font-semibold text-[#0b3d2e] mb-1">
+                        East Africa Ebola Situation & Visitor Protection Protocol:
+                      </p>
+                      <p className="text-gray-700 mb-2 leading-normal">
+                        Regarding regional surveillance in East Africa and the <strong>single isolated case identified in Kenya</strong>: the patient was immediately quarantined at a national specialized isolation facility, rigorous contact tracing was executed, and there has been zero secondary community transmission. Kenya remains fully open, peaceful, and safe. To protect every explorer, Cool J Expeditions enforces <strong>private sanitized 4x4 Land Cruisers</strong>, touch-free sanitizing stations, certified health-screened guides and cooks, purified boiling water, and <strong>AMREF Flying Doctors emergency medical evacuation coverage</strong>.
+                      </p>
+                      <a
+                        href="#field-stories"
+                        className="inline-flex items-center gap-1 text-[#0b3d2e] hover:text-[#C9A24A] font-extrabold text-[11px] underline underline-offset-2 transition-colors cursor-pointer"
+                      >
+                        <span>📖 Read Mfalme Ukweli's Full Dispatch & Safety Protocol in Field Notes</span>
+                        <span>→</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
@@ -1868,7 +2018,7 @@ export default function App() {
                       👥 Explorer Group Count ({guestsCount} {guestsCount === 1 ? "Traveler" : "Travelers"})
                     </label>
                     <span className="text-xs font-mono font-bold text-[#C9A24A] bg-[#0b3d2e] px-2.5 py-0.5 rounded self-start sm:self-auto shrink-0 shadow-xs">
-                      {liveQuote.vehiclesNeeded} x 4x4 Cruiser{liveQuote.vehiclesNeeded > 1 ? "s" : ""} Assigned
+                      {liveQuote.vehiclesNeeded} x 4x4 Cruiser{liveQuote.vehiclesNeeded > 1 ? "s" : ""} Assigned (${liveQuote.cruiserDailyRate}/day)
                     </span>
                   </div>
 
@@ -1936,6 +2086,11 @@ export default function App() {
                       </button>
                     ))}
                   </div>
+
+                  <p className="text-[10px] text-gray-500 mt-2.5 flex items-center gap-1.5 leading-relaxed">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#0b3d2e] shrink-0" />
+                    <span>Dedicated 4x4 Land Cruiser rates scale from <strong>$250 to $350/day</strong> depending on destination terrain & distance (assigned: <strong>${liveQuote.cruiserDailyRate}/day</strong>).</span>
+                  </p>
                 </div>
 
               </div>
@@ -1979,6 +2134,13 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {quoteValidationMsg && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-3 text-xs font-medium flex items-center gap-2">
+                  <Info className="h-4 w-4 text-amber-600 shrink-0" />
+                  <span>{quoteValidationMsg}</span>
+                </div>
+              )}
 
               <div className="pt-2 flex gap-4 w-full min-w-0">
                 <button
@@ -2075,7 +2237,7 @@ export default function App() {
                     {/* Breakdown details */}
                     <div className="mt-3 pt-2 border-t border-dashed border-gray-200 text-[10px] text-gray-500 space-y-1.5 min-w-0">
                       <div className="flex justify-between items-center gap-2 min-w-0">
-                        <span className="truncate">• 4x4 Land Cruiser Fleet ({liveQuote.vehiclesNeeded} veh):</span>
+                        <span className="truncate">• 4x4 Land Cruiser Fleet ({liveQuote.vehiclesNeeded} veh • ${liveQuote.cruiserDailyRate}/day):</span>
                         <span className="font-medium text-gray-700 font-mono shrink-0">${liveQuote.transportEstimate}</span>
                       </div>
                       <div className="flex justify-between items-center gap-2 min-w-0">
@@ -2102,7 +2264,7 @@ export default function App() {
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-2 sm:px-3 rounded-xl text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer active:scale-95 truncate"
                         id="trigger-mpesa-checkout-modal"
                       >
-                        💸 M-Pesa Pay (10 KES Test)
+                        💸 M-Pesa Pay (Lipa Na M-Pesa)
                       </button>
 
                       <button
@@ -2290,6 +2452,10 @@ export default function App() {
                   alt={AUTHENTIC_GALLERY[galleryActiveIdx].title}
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/assets/images/point-lenana-peak-sign.jpg";
+                  }}
                 />
                 
                 {/* Category & Badge overlay */}
@@ -2338,6 +2504,10 @@ export default function App() {
                         alt={item.title}
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "/assets/images/point-lenana-peak-sign.jpg";
+                        }}
                       />
                     </div>
                     <div className="overflow-hidden">
@@ -2386,8 +2556,9 @@ export default function App() {
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
           
           <div className="space-y-6">
-            <span className="text-xs font-black uppercase tracking-widest text-[#C9A24A]">
-              THE MAN, THE LEGEND
+            <span className="text-xs font-black uppercase tracking-widest text-[#C9A24A] flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-[#C9A24A]"></span>
+              FOUNDER STORY & VISION
             </span>
             <h2 className="text-3xl sm:text-4.5xl font-serif font-extrabold tracking-tight">
               A Message from Cool J
@@ -2406,18 +2577,44 @@ export default function App() {
               </p>
             </div>
 
-            <div className="flex gap-4 pt-4 border-t border-white/10 items-center">
-              <div className="h-12 w-12 rounded-full border-2 border-[#C9A24A] overflow-hidden bg-emerald-950 flex-shrink-0">
-                <img 
-                  src={coolJGuide} 
-                  alt="John Mwangi M. (Cool J) guiding on the trail"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
+            {/* Prominent Founder Photo Card */}
+            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start pt-5 border-t border-white/10 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+              <div className="relative shrink-0">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-[#C9A24A] shadow-xl bg-emerald-950">
+                  <img 
+                    src={coolJFounderPhoto} 
+                    alt="John Mwangi M. (Cool J) guiding on the trail - Founder & Mountain Technical Lead"
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null;
+                      if (!target.src.includes("cool-j.jpg")) {
+                        target.src = "/assets/images/cool-j.jpg";
+                      } else if (!target.src.includes("John")) {
+                        target.src = "/assets/images/John%20Mwangi%20M.%20(Cool%20J).jpg";
+                      } else {
+                        target.src = "/cool-j-logo.jpg";
+                      }
+                    }}
+                  />
+                </div>
+                <span className="absolute -bottom-2 -right-2 bg-[#C9A24A] text-[#0B3D2E] text-[10px] font-black uppercase px-2 py-0.5 rounded-full shadow-md">
+                  Founder
+                </span>
               </div>
-              <div>
-                <span className="block font-bold text-sm text-[#C9A24A]">John Mwangi M. (Cool J)</span>
-                <span className="text-[10px] text-gray-300 font-mono">Founder & Mountain Technical Lead</span>
+              <div className="space-y-1 text-center sm:text-left">
+                <span className="block font-bold text-base text-[#C9A24A]">John Mwangi M. (Cool J)</span>
+                <span className="block text-xs text-emerald-200 font-mono">Founder & Mountain Technical Lead • 20+ Years on Mount Kenya</span>
+                <p className="text-[11px] text-gray-300 font-light leading-relaxed pt-1">
+                  Born in the foothills of Mount Kenya. Passionate high-altitude lead guide, youth boxing patron, and lifelong champion of porter welfare and fair wages.
+                </p>
+                <a 
+                  href="#field-stories"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#C9A24A] hover:text-[#FAF8F5] font-bold underline underline-offset-4 mt-2 transition-colors"
+                >
+                  Read Cool J's Full Founder Story & Vision in Field Notes →
+                </a>
               </div>
             </div>
           </div>
@@ -2638,6 +2835,10 @@ export default function App() {
                           alt={rev.name} 
                           className="h-10 w-10 rounded-full object-cover border border-[#C9A24A]/40 shadow-sm"
                           referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/assets/images/mfalme-ukweli.png";
+                          }}
                         />
                       ) : rev.name.toLowerCase().includes("roda") ? (
                         <img 
@@ -2645,6 +2846,10 @@ export default function App() {
                           alt={rev.name} 
                           className="h-10 w-10 rounded-full object-cover border border-[#C9A24A]/40 shadow-sm"
                           referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/assets/images/Roda%20wa%20Shiku.jpg";
+                          }}
                         />
                       ) : rev.photo ? (
                         <img 
@@ -2652,6 +2857,11 @@ export default function App() {
                           alt={rev.name} 
                           className="h-10 w-10 rounded-full object-cover border border-[#C9A24A]/40 shadow-sm"
                           referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            // If user custom review photo fails, fallback to letter avatar
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
                       ) : (
                         <div className="h-10 w-10 rounded-full bg-[#F4EDE2] text-[#0b3d2e] flex items-center justify-center font-black text-sm border border-[#EADFCF]">
@@ -2999,8 +3209,8 @@ export default function App() {
       <MpesaSimModal
         isOpen={isMpesaOpen}
         onClose={() => setIsMpesaOpen(false)}
-        usdAmount={quoteResponse ? quoteResponse.amount : 250}
-        quoteId={quoteResponse ? quoteResponse.quoteId : "CJE-FALLBACK"}
+        usdAmount={quoteResponse ? quoteResponse.amount : liveQuote.totalAmount}
+        quoteId={quoteResponse ? quoteResponse.quoteId : "CJE-CALC"}
       />
 
       {/* PRIVACY & COOKIE POLICY MODAL */}

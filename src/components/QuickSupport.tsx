@@ -54,7 +54,13 @@ export default function QuickSupport({
 
     const fullMessage = encodeURIComponent(baseText + contextString);
     const whatsappUrl = `https://wa.me/254720572251?text=${fullMessage}`;
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    const link = document.createElement("a");
+    link.href = whatsappUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     setIsOpen(false);
   };
 

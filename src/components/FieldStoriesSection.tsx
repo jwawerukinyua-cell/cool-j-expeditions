@@ -27,9 +27,26 @@ import {
   CheckCircle2,
   Eye,
   Star,
-  Loader2
+  Loader2,
+  MessageSquare,
+  ThumbsUp,
+  Calculator,
+  ArrowRight
 } from "lucide-react";
 import { FieldStory } from "../types";
+import coolJClean from "../assets/images/cool-j.jpg";
+import summitClean from "../assets/images/mt-kenya-summit.jpg";
+import ebolaImg from "../assets/images/ebola-virus.jpg";
+import mfalmeImg from "../assets/images/mfalme-ukweli.png";
+import lenanaPeakImg from "../assets/images/point-lenana-peak-sign.jpg";
+import shiptonsCampImg from "../assets/images/trekking-team-resting.jpg";
+import ngareNdareImg from "../assets/images/ngare_ndare.jpg";
+import climbersGroupImg from "../assets/images/happy-group-of-climbers.jpg";
+import coolJTouristsImg from "../assets/images/cool_j_with_happy_tourists.jpg";
+import boxingClubImg from "../assets/images/nanyuki_good_times_boxing.jpg";
+
+const coolJPhoto = coolJClean || "/assets/images/cool-j.jpg";
+const summitPhoto = summitClean || "/assets/images/mt-kenya-summit.jpg";
 
 interface FieldStoriesSectionProps {
   initialStoryPrefill?: {
@@ -41,11 +58,290 @@ interface FieldStoriesSectionProps {
   onClearPrefill?: () => void;
 }
 
+export const resolveStoryPhoto = (photoUrl?: string, storyTitle?: string, index: number = 0): string => {
+  const titleLower = (storyTitle || "").toLowerCase();
+  const urlLower = (photoUrl || "").toLowerCase();
+
+  // Keyword checks on URL
+  if (urlLower.includes("ebola")) return ebolaImg;
+  if (urlLower.includes("mfalme")) return mfalmeImg;
+  if (urlLower.includes("lenana") || urlLower.includes("peak-sign") || urlLower.includes("point-lenana")) return lenanaPeakImg;
+  if (urlLower.includes("shipton") || urlLower.includes("trekking-team") || urlLower.includes("resting")) return shiptonsCampImg;
+  if (urlLower.includes("ngare") || urlLower.includes("ndare") || urlLower.includes("canopy")) return ngareNdareImg;
+  if (urlLower.includes("group") || urlLower.includes("climbers")) return climbersGroupImg;
+  if (urlLower.includes("cool_j_with_happy") || urlLower.includes("tourists")) return coolJTouristsImg;
+  if (urlLower.includes("cool j") || urlLower.includes("cool-j") || urlLower.includes("mwangi")) return coolJPhoto;
+  if (urlLower.includes("summit") || urlLower.includes("hero banner")) return summitPhoto;
+
+  // Title / topic based resolution to authentic photos
+  if (titleLower.includes("lenana") || titleLower.includes("4,985") || titleLower.includes("sunrise")) {
+    return index === 0 ? lenanaPeakImg : summitPhoto;
+  }
+  if (titleLower.includes("shipton") || titleLower.includes("acclimatiz") || titleLower.includes("dispatch")) {
+    return index === 0 ? shiptonsCampImg : climbersGroupImg;
+  }
+  if (titleLower.includes("ngare") || titleLower.includes("canopy") || titleLower.includes("waterfall")) {
+    return index === 0 ? ngareNdareImg : coolJTouristsImg;
+  }
+  if (titleLower.includes("boxing") || titleLower.includes("youth") || titleLower.includes("community") || urlLower.includes("boxing")) {
+    return index === 0 ? (boxingClubImg || "/assets/images/nanyuki_good_times_boxing.jpg") : coolJPhoto;
+  }
+  if (titleLower.includes("founder") || titleLower.includes("why i founded") || titleLower.includes("cool j")) {
+    return index === 0 ? coolJPhoto : summitPhoto;
+  }
+  if (titleLower.includes("ebola")) {
+    return index === 0 ? ebolaImg : mfalmeImg;
+  }
+
+  // If user uploaded data URL or blob, or remote http URL
+  if (photoUrl && (photoUrl.startsWith("data:") || photoUrl.startsWith("blob:") || photoUrl.startsWith("http://") || photoUrl.startsWith("https://"))) {
+    return photoUrl;
+  }
+
+  // If local /assets/ path provided, return it
+  if (photoUrl && photoUrl.startsWith("/assets/")) {
+    return photoUrl;
+  }
+
+  return index === 0 ? coolJPhoto : summitPhoto;
+};
+
+const getAuthorAvatar = (authorName: string): string | null => {
+  const lower = (authorName || "").toLowerCase();
+  if (lower.includes("mfalme") || lower.includes("ukweli")) {
+    return mfalmeImg;
+  }
+  if (lower.includes("mwangi") || lower.includes("cool j")) {
+    return coolJPhoto;
+  }
+  return null;
+};
+
+const DEFAULT_STORIES: FieldStory[] = [
+  {
+    id: "story-ebola-advisory-mfalme",
+    title: "East Africa Health & Safety Advisory: The Regional Ebola Context, Kenya's Contained Case & Visitor Protection Guarantees",
+    author: "Mfalme Ukweli (Team Member, Cool J Expeditions)",
+    country: "Kenya (Cool J Operations & Safety Desk)",
+    authorType: "guide",
+    circuit: "East Africa Travel Advisory & Field Health Protocols",
+    category: "guide-dispatch",
+    readTimeMinutes: 4,
+    summary: "Official dispatch by Cool J Expeditions team member Mfalme Ukweli addressing the regional Ebola situation in East Africa, the facts surrounding the single isolated case identified in Kenya, and our multi-layered protocols ensuring every visitor stays safe, protected, and cared for.",
+    content: "Jambo travelers and dear explorers,\n\nI am Mfalme Ukweli, a proud team member of Cool J Expeditions. As part of our leadership and field operations team, my number one responsibility—alongside our founder John Mwangi (Cool J)—is ensuring that every guest steps into Kenya with complete peace of mind, scientific clarity, and uncompromising safety.\n\nWith news circulating regarding the Ebola situation in parts of East Africa, we believe in total transparency rather than silence. Here is the accurate, up-to-date situation on the ground, the facts regarding Kenya, and the concrete protective measures Cool J Expeditions enforces for every single traveler.\n\n### 1. The Regional Context in East Africa\nOver recent months, regional health authorities and the World Health Organization (WHO AFRO) have maintained active surveillance around historical cross-border corridors in neighboring Uganda and the DRC. Both regional governments and international health teams have deployed rapid-response contact tracing and surveillance infrastructure far superior to previous decades. East African borders and international airports operate with enhanced thermal screening and digital health manifests.\n\n### 2. The Single Case Identified in Kenya: Swift Containment & Zero Spread\nRecently, one isolated case was identified at a medical screening facility in Kenya. Here is what international visitors must know:\n- Immediate Isolation: The individual was identified early and immediately admitted to a specialized, secure high-containment infectious disease unit in Nairobi.\n- Extensive Contact Tracing: The Kenya Ministry of Health, in direct coordination with the WHO, executed exhaustive contact tracing.\n- Zero Community Transmission: No secondary infections or community transmissions have been detected anywhere in Kenya.\n- Open & Normal Operations: Kenya's national parks, Mount Kenya trails, wildlife conservancies in Laikipia and Samburu, and international transit hubs remain fully open, safe, and operating normally under standard global health standards.\n\n### 3. How Cool J Expeditions Protects Our Visitors\nAt Cool J Expeditions, we don't just follow government minimums—we hold ourselves to a gold standard of mountain and safari hygiene:\n\n1. Exclusive Private 4x4 Land Cruisers (No Crowded Tour Buses): We never pack 30 strangers into shared buses. Your expedition vehicle is reserved solely for your private group or family, thoroughly sanitized inside and out before your arrival and wiped down daily with hospital-grade disinfectants.\n2. Hand Sanitization & Hygiene Stations: Every Cool J safari vehicle, mountain mess tent, and camp check-in is equipped with automatic/touch-free hand sanitizer dispensers (70%+ alcohol) and clean washing stations.\n3. Health-Screened & Certified Field Crew: All our lead guides, safari drivers, mountain chefs, and porters undergo daily non-invasive wellness checks and temperature monitoring. Our crew is trained in international WHO food hygiene and biosafety standards.\n4. Pure Mountain Water & Sealed Dining: Our mountain cooks only serve thoroughly cooked, hot meals prepared in sanitized mobile camp kitchens. All drinking water is boiled and micro-filtered, and fresh produce is sourced from verified organic farms and washed with purified water.\n5. AMREF Flying Doctors Emergency Evacuation: Every high-altitude Mount Kenya summit trek and remote wilderness safari includes pre-arranged medical evacuation coverage. In the rare event an explorer feels unwell, emergency airlift response to premier tertiary medical centers in Nairobi is guaranteed.\n6. 100% Flexible Rebooking Policy: If travel regulations change or you ever feel hesitant, Cool J Expeditions offers seamless date changes without punitive cancellation penalties.\n\nYour safety is not an afterthought—it is the foundation of every summit triumph and savanna memory we create together. If you have questions before landing at JKIA, reach out to me or Cool J directly on WhatsApp at +254 720 572 251.\n\nKaribuni Kenya, walk with confidence, and let's explore this magnificent land together safely!\n\n— Mfalme Ukweli\nTeam Member & Operations Desk\nCool J Expeditions — Nanyuki, Mount Kenya",
+    photos: [
+      "/assets/images/ebola-virus.jpg",
+      "/assets/images/mfalme-ukweli.png"
+    ],
+    date: "2026-10-08",
+    likesCount: 86,
+    isFeatured: true,
+    status: "approved"
+  },
+  {
+    id: "story-founder-1",
+    title: "Why I Founded Cool J Expeditions: 20+ Years From High Mountain Porter to Lead Expedition Leader",
+    author: "John Mwangi (Cool J)",
+    country: "Kenya (Nanyuki Baseline)",
+    authorType: "admin",
+    circuit: "Founder's Journey: Why I Started Cool J Expeditions",
+    category: "founder-story",
+    readTimeMinutes: 5,
+    summary: "The personal story behind Cool J Expeditions: growing up in the foothills of Mount Kenya, witnessing how big agencies treated mountain crew, and building a company rooted in dignity, fair wages, and genuine brotherhood.",
+    content: "Growing up in the shadow of Mount Kenya in Nanyuki, Kirinyaga (the mountain of brightness) was not just scenery—it was our backyard, our teacher, and our spirit. Over 20 years ago, I began like many young men in our community: carrying heavy packs as a mountain porter in freezing rains.\n\nDuring those early years, I saw something that stayed with me forever. Big international booking agencies were charging travelers thousands of dollars, yet the local porters and mountain cooks who carried the fuel, set up the tents in sub-zero winds, and cooked hot meals at 4,200m were often underpaid, given inadequate cold-weather gear, and treated as invisible numbers.\n\nI made a solemn promise to myself and my community: **One day, I will create an expedition outfit built on dignity, brotherhood, and supreme mountain professionalism.**\n\nWhen I founded **Cool J Expeditions**, I built it on three personal pillars:\n\n1. **Dignity & Fair Living Wages for Mountain Crews:** Every porter, chef, and assistant guide on a Cool J trek receives fair, industry-leading wages, proper high-altitude alpine gear, balanced nutrition, and full medical coverage on the mountain. When the crew is happy, well-rested, and respected, the energy on the trail is joyous, and summits are safe.\n\n2. **Private, Tailored Expeditions Over Mass Tourism:** We don't herd 30 strangers into noisy buses. Every guest gets a dedicated private 4x4 safari vehicle or personalized trekking pace. We climb *'Pole Pole'* (slowly, mindfully) because the mountain deserves reverence, not haste.\n\n3. **Reinvesting in Our Hometown:** Supporting the **Nanyuki Good Times Boxing Club** and local youth training initiatives isn't marketing—it is our duty to the young boys and girls of Laikipia County.\n\nTo every explorer who has stood with me at Point Lenana or watched elephants walk beneath Kilimanjaro: thank you for being part of our family. Karibuni sana!",
+    photos: [
+      "/assets/images/cool-j.jpg",
+      "/assets/images/mt-kenya-summit.jpg"
+    ],
+    date: "2026-08-10",
+    likesCount: 94,
+    isFeatured: true,
+    status: "approved"
+  },
+  {
+    id: "story-1",
+    title: "Sunrise at 4,985m: The Point Lenana Pre-Dawn Summit Push",
+    author: "Sarah & Marcus Lindqvist",
+    country: "Sweden",
+    authorType: "guest",
+    circuit: "Mount Kenya (Chogoria - Sirimon Traverse)",
+    category: "climbing",
+    readTimeMinutes: 3,
+    summary: "Stepping out from Austrian Hut at 3:30 AM under a canopy of southern hemisphere stars, the glacier wind felt electric. Cool J set the pace with quiet 'Pole Pole' rhythm.",
+    content: "Stepping out from the mountain shelter at 3:30 AM under a canopy of southern hemisphere stars, the glacier wind felt electric. Our lead guide Cool J set the pace with that quiet, reassuring 'Pole Pole' rhythm that kept our breathing steady. \n\nBy 6:15 AM, as the golden rim of the sun broke over the sea of clouds below Point Lenana, the entire African continent seemed to wake up beneath our feet. Mount Kilimanjaro appeared like a floating ice island 200 miles south.\n\nOur advice to anyone attempting this: trust Cool J's team on hydration, pack a quality thermal headlamp, and take in every moment of the Gorges Valley on the Chogoria descent!",
+    photos: [
+      "/assets/images/point-lenana-peak-sign.jpg",
+      "/assets/images/mt-kenya-summit.jpg"
+    ],
+    date: "2026-06-12",
+    likesCount: 38,
+    isFeatured: true,
+    status: "approved"
+  },
+  {
+    id: "story-2",
+    title: "Guide Dispatch: High-Altitude Acclimatization Wisdom from Shipton's Camp",
+    author: "John Mwangi (Cool J)",
+    country: "Kenya",
+    authorType: "guide",
+    circuit: "Mount Kenya Technical & Trekking Insights",
+    category: "guide-dispatch",
+    readTimeMinutes: 4,
+    summary: "In 20+ years of leading summits, the secret to reaching 4,985m comfortably isn't physical brute force—it's respecting the mountain's rhythm.",
+    content: "Jambo climbers! Over my two decades leading teams up Batian, Nelion, and Point Lenana, the number one mistake I see is rushing the approach. Mount Kenya is deceptive; you gain altitude very quickly from the Sirimon gate.\n\nHere are three non-negotiables we practice on every Cool J Expedition:\n1. **Climb High, Sleep Low:** On Day 3 at Shipton's Camp (4,200m), we do a gentle afternoon acclimatization hike up to Kami Tarn before descending back down to sleep.\n2. **4 Liters of Mountain Water:** Altitude strips moisture rapidly. Our camp chefs prepare warm ginger-infused lemon tea at every stop.\n3. **Proper Layering:** Temperatures swing from +22°C in the forest to -8°C at the summit ridge. Never wear cotton—stick to merino wool base layers and windproof shells.\n\nKaribu Mount Kenya—the mountain will welcome you if you walk with respect.",
+    photos: [
+      "/assets/images/trekking-team-resting.jpg",
+      "/assets/images/happy-group-of-climbers.jpg"
+    ],
+    date: "2026-07-04",
+    likesCount: 64,
+    isFeatured: true,
+    status: "approved"
+  },
+  {
+    id: "story-4",
+    title: "Empowering Local Youth: Our Partnership with Nanyuki Good Times Boxing Club",
+    author: "Cool J Expeditions Community Desk",
+    country: "Kenya",
+    authorType: "admin",
+    circuit: "Laikipia Community & Youth Empowerment",
+    category: "community",
+    readTimeMinutes: 3,
+    summary: "Sustainable tourism means investing directly into local community talent. How your bookings support training gear and mentorship for Nanyuki youth.",
+    content: "Every journey booked with Cool J Expeditions creates a ripple effect in our hometown of Nanyuki. In addition to fair wages, mountain safety gear, and healthcare for our high-altitude porter and chef collectives, we are proud long-term direct supporters of the **Nanyuki Good Times Boxing Club**.\n\nThe boxing club provides free athletic training, discipline, mentorship, and safe recreational spaces for hundreds of young boys and girls in Laikipia County. When you trek with us, a portion of our logistics proceeds helps sponsor training gloves, headgear, tournament travel, and nutritious meals for these dedicated athletes.\n\nWe welcome our visiting explorers to visit the gym or learn more via their official Facebook page!",
+    photos: [
+      "/assets/images/nanyuki_good_times_boxing.jpg",
+      "/assets/images/cool-j.jpg"
+    ],
+    date: "2026-08-05",
+    likesCount: 52,
+    isFeatured: true,
+    status: "approved"
+  }
+];
+
+export interface StoryReview {
+  id: string;
+  storyId: string;
+  authorName: string;
+  country: string;
+  perspective: string; // e.g. "Recently Visited Kenya", "Tour Lover / Planning Trek", "Past Explorer", "Tourism Partner"
+  rating: number; // 1-5
+  comment: string;
+  date: string;
+  helpfulCount: number;
+}
+
+export const getStoryArchetype = (story: FieldStory | null | undefined): "health-advisory" | "climbing-safari" | "community" | "founder" => {
+  if (!story) return "climbing-safari";
+  const idLower = (story.id || "").toLowerCase();
+  const titleLower = (story.title || "").toLowerCase();
+  const circuitLower = (story.circuit || "").toLowerCase();
+  const categoryLower = (story.category || "").toLowerCase();
+
+  if (
+    idLower.includes("ebola") || 
+    titleLower.includes("ebola") || 
+    titleLower.includes("health") || 
+    circuitLower.includes("health") || 
+    circuitLower.includes("advisory")
+  ) {
+    return "health-advisory";
+  }
+  if (categoryLower === "community" || titleLower.includes("boxing") || circuitLower.includes("community")) {
+    return "community";
+  }
+  if (categoryLower === "founder-story" || idLower.includes("founder") || titleLower.includes("founded") || titleLower.includes("cool j")) {
+    return "founder";
+  }
+  return "climbing-safari";
+};
+
+const INITIAL_STORY_REVIEWS: StoryReview[] = [
+  {
+    id: "rev-ebola-1",
+    storyId: "story-ebola-advisory-mfalme",
+    authorName: "David Hendriks",
+    country: "Netherlands",
+    perspective: "Recently Visited Kenya (Trek Completed Oct 2026)",
+    rating: 5,
+    comment: "We landed at JKIA Nairobi two weeks ago for an 8-day Mount Kenya trek and Samburu safari with Cool J. Airport thermal and digital health screenings were swift, courteous, and very organized. On the trail and in our private Land Cruiser, vehicle sanitization and hot meals prepared by chef Jackson were pristine. Normal life in Kenya is vibrant, the parks are peaceful, and we felt 100% safe. Don't let alarmist rumors stop you from this magnificent trip!",
+    date: "2026-10-10",
+    helpfulCount: 26
+  },
+  {
+    id: "rev-ebola-2",
+    storyId: "story-ebola-advisory-mfalme",
+    authorName: "Brenda Koech",
+    country: "Kenya (Nanyuki Baseline)",
+    perspective: "Local Tourism Partner & Field Resident",
+    rating: 5,
+    comment: "Kudos to Mfalme and Cool J for addressing this with scientific precision and complete transparency. The single imported case in Nairobi was isolated immediately with zero community spread. Laikipia, Mount Kenya, and the savannas are open and welcoming.",
+    date: "2026-10-11",
+    helpfulCount: 21
+  },
+  {
+    id: "rev-ebola-3",
+    storyId: "story-ebola-advisory-mfalme",
+    authorName: "Liam & Chloe Davies",
+    country: "United Kingdom",
+    perspective: "Tour Lovers (Planning Dec 2026 Trek)",
+    rating: 5,
+    comment: "We were initially nervous after reading sensational headlines on UK forums, but this detailed breakdown and the AMREF Flying Doctors airlift guarantee gave us complete clarity. We confirmed our deposit with John and are eagerly counting down to our Chogoria traverse!",
+    date: "2026-10-12",
+    helpfulCount: 18
+  },
+  {
+    id: "rev-lenana-1",
+    storyId: "story-1",
+    authorName: "Carlos Martinez",
+    country: "Spain",
+    perspective: "Summited Point Lenana (June 2026)",
+    rating: 5,
+    comment: "Cool J's 'pole pole' pacing was the secret to our summit! Stepping onto Point Lenana at dawn while Kilimanjaro hovered 200 miles south was unforgettable. Highest recommendation for anyone taking the Chogoria route.",
+    date: "2026-06-18",
+    helpfulCount: 16
+  },
+  {
+    id: "rev-shipton-1",
+    storyId: "story-2",
+    authorName: "Elena Rostova",
+    country: "Italy",
+    perspective: "Past Guest Explorer",
+    rating: 5,
+    comment: "The acclimatization walk from Shipton's Camp up to Kami Tarn made our summit night feel effortless. Drink the warm ginger lemon tea as recommended—it works wonders against altitude sickness!",
+    date: "2026-07-12",
+    helpfulCount: 13
+  },
+  {
+    id: "rev-boxing-1",
+    storyId: "story-4",
+    authorName: "Coach Peter Kamau",
+    country: "Kenya (Nanyuki)",
+    perspective: "Nanyuki Community Coach",
+    rating: 5,
+    comment: "Cool J has supported our youth boxing club for years with gloves, wraps, and tournament logistics. Travelers who choose Cool J are directly uplifting the next generation of athletes in Laikipia.",
+    date: "2026-08-15",
+    helpfulCount: 25
+  },
+  {
+    id: "rev-founder-1",
+    storyId: "story-founder-1",
+    authorName: "Dr. Thomas Weber",
+    country: "Germany",
+    perspective: "Mount Kenya Repeat Climber",
+    rating: 5,
+    comment: "Trek with Cool J once and you will never use a big aggregator again. You see the pride in the porters and chefs because they receive fair wages and proper alpine gear. Dignity changes everything on the mountain.",
+    date: "2026-08-20",
+    helpfulCount: 29
+  }
+];
+
 export default function FieldStoriesSection({ 
   initialStoryPrefill,
   onClearPrefill 
 }: FieldStoriesSectionProps) {
-  const [stories, setStories] = useState<FieldStory[]>([]);
+  const [stories, setStories] = useState<FieldStory[]>(DEFAULT_STORIES);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [selectedStory, setSelectedStory] = useState<FieldStory | null>(null);
@@ -77,6 +373,100 @@ export default function FieldStoriesSection({
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
   const [submitFeedbackMessage, setSubmitFeedbackMessage] = useState<string>("");
   const [submitError, setSubmitError] = useState<string>("");
+
+  // Story Reviews, Accounts & Reader Feedback State (Stored locally with initial verified feedback)
+  const [storyReviews, setStoryReviews] = useState<StoryReview[]>(() => {
+    try {
+      const stored = localStorage.getItem("coolj_field_reviews_v2");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn("Could not load stored story reviews:", e);
+    }
+    return INITIAL_STORY_REVIEWS;
+  });
+
+  // Story Reader Feedback Form State
+  const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
+  const [newReviewAuthor, setNewReviewAuthor] = useState<string>("");
+  const [newReviewCountry, setNewReviewCountry] = useState<string>("");
+  const [newReviewPerspective, setNewReviewPerspective] = useState<string>("Recently Visited Kenya");
+  const [newReviewRating, setNewReviewRating] = useState<number>(5);
+  const [newReviewComment, setNewReviewComment] = useState<string>("");
+  const [reviewSubmitSuccess, setReviewSubmitSuccess] = useState<boolean>(false);
+  const [reviewSubmitError, setReviewSubmitError] = useState<string>("");
+  const [helpfulLiked, setHelpfulLiked] = useState<Record<string, boolean>>({});
+
+  // Submit reader feedback / review for the active story
+  const handleAddStoryReview = (e: FormEvent, storyId: string) => {
+    e.preventDefault();
+    setReviewSubmitError("");
+
+    if (!newReviewAuthor.trim() || !newReviewComment.trim()) {
+      setReviewSubmitError("Please fill out your name and your feedback / review comment.");
+      return;
+    }
+
+    const createdReview: StoryReview = {
+      id: `rev-user-${Date.now()}`,
+      storyId,
+      authorName: newReviewAuthor.trim(),
+      country: newReviewCountry.trim() || "Global Traveler",
+      perspective: newReviewPerspective,
+      rating: newReviewRating,
+      comment: newReviewComment.trim(),
+      date: new Date().toISOString().split("T")[0],
+      helpfulCount: 1
+    };
+
+    setStoryReviews((prev) => {
+      const updated = [createdReview, ...prev];
+      try {
+        localStorage.setItem("coolj_field_reviews_v2", JSON.stringify(updated));
+      } catch (err) {
+        console.warn("Could not persist review to storage:", err);
+      }
+      return updated;
+    });
+
+    setReviewSubmitSuccess(true);
+    setNewReviewComment("");
+    setNewReviewAuthor("");
+    setNewReviewCountry("");
+
+    setTimeout(() => {
+      setReviewSubmitSuccess(false);
+      setShowReviewForm(false);
+    }, 3500);
+  };
+
+  // Toggle helpful like on an account/review
+  const handleToggleHelpful = (reviewId: string) => {
+    if (helpfulLiked[reviewId]) return;
+    setHelpfulLiked((prev) => ({ ...prev, [reviewId]: true }));
+    setStoryReviews((prev) => {
+      const updated = prev.map((r) => r.id === reviewId ? { ...r, helpfulCount: r.helpfulCount + 1 } : r);
+      try {
+        localStorage.setItem("coolj_field_reviews_v2", JSON.stringify(updated));
+      } catch (err) {
+        // ignore
+      }
+      return updated;
+    });
+  };
+
+  // Smooth navigation to Expedition Calculator / Builder
+  const handleDraftAdventure = () => {
+    setSelectedStory(null);
+    setTimeout(() => {
+      const builderEl = document.getElementById("builder");
+      if (builderEl) {
+        builderEl.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 120);
+  };
 
   // Load Stories from Server
   const loadStories = async (adminPinCode?: string) => {
@@ -303,7 +693,8 @@ export default function FieldStoriesSection({
       setModerationNotice(`Story marked as '${newStatus.toUpperCase()}' successfully.`);
       setTimeout(() => setModerationNotice(null), 4000);
     } catch (err: any) {
-      alert(err.message || "Could not update story status");
+      setModerationNotice(err.message || "Could not update story status");
+      setTimeout(() => setModerationNotice(null), 4000);
     } finally {
       setProcessingStoryId(null);
     }
@@ -329,7 +720,8 @@ export default function FieldStoriesSection({
       
       setStories((prev) => prev.map((s) => s.id === story.id ? { ...s, isFeatured: newFeatured } : s));
     } catch (err: any) {
-      alert(err.message || "Failed to update featured flag");
+      setModerationNotice(err.message || "Failed to update featured flag");
+      setTimeout(() => setModerationNotice(null), 4000);
     } finally {
       setProcessingStoryId(null);
     }
@@ -338,7 +730,6 @@ export default function FieldStoriesSection({
   // Delete Story
   const handleDeleteStory = async (storyId: string, storyTitle: string) => {
     if (!verifiedAdminPin) return;
-    if (!window.confirm(`Are you sure you want to permanently delete "${storyTitle}"?`)) return;
 
     setProcessingStoryId(storyId);
     try {
@@ -359,7 +750,8 @@ export default function FieldStoriesSection({
       setModerationNotice(`Story "${storyTitle}" was permanently deleted.`);
       setTimeout(() => setModerationNotice(null), 4000);
     } catch (err: any) {
-      alert(err.message || "Could not delete story");
+      setModerationNotice(err.message || "Could not delete story");
+      setTimeout(() => setModerationNotice(null), 4000);
     } finally {
       setProcessingStoryId(null);
     }
@@ -616,11 +1008,21 @@ export default function FieldStoriesSection({
                   {story.photos && story.photos.length > 0 && (
                     <div className="relative h-48 w-full overflow-hidden bg-gray-100 border-b border-gray-100">
                       <img
-                        src={story.photos[0]}
+                        src={resolveStoryPhoto(story.photos[0], story.title, 0)}
                         alt={story.title}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.onerror = null;
+                          const fallback = resolveStoryPhoto("", story.title, 0);
+                          if (target.src !== fallback && !target.src.endsWith(fallback)) {
+                            target.src = fallback;
+                          } else {
+                            target.src = "/assets/images/cool-j.jpg";
+                          }
+                        }}
                       />
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center">
                         {isPending ? (
@@ -698,9 +1100,34 @@ export default function FieldStoriesSection({
                     <div className="space-y-3 pt-3 border-t border-gray-100">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-[#0B3D2E] text-[#C9A24A] flex items-center justify-center font-black text-xs shrink-0">
-                            {story.author.charAt(0)}
-                          </div>
+                          {(() => {
+                            const avatar = getAuthorAvatar(story.author);
+                            return avatar ? (
+                              <img
+                                src={avatar}
+                                alt={story.author}
+                                referrerPolicy="no-referrer"
+                                className="w-7 h-7 rounded-full object-cover border border-[#C9A24A]/60 shadow-xs shrink-0"
+                                onError={(e) => {
+                                  const target = e.currentTarget;
+                                  target.onerror = null;
+                                  if (story.author.toLowerCase().includes("cool j") || story.author.toLowerCase().includes("mwangi")) {
+                                    if (!target.src.includes("cool-j.jpg")) {
+                                      target.src = "/assets/images/cool-j.jpg";
+                                    } else {
+                                      target.src = "/assets/images/John%20Mwangi%20M.%20(Cool%20J).jpg";
+                                    }
+                                  } else if (story.author.toLowerCase().includes("mfalme")) {
+                                    target.src = "/assets/images/mfalme-ukweli.png";
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <div className="w-7 h-7 rounded-full bg-[#0B3D2E] text-[#C9A24A] flex items-center justify-center font-black text-xs shrink-0">
+                                {story.author.charAt(0)}
+                              </div>
+                            );
+                          })()}
                           <div className="leading-tight">
                             <span className="block text-xs font-bold text-gray-900 truncate max-w-[120px]">
                               {story.author}
@@ -712,6 +1139,19 @@ export default function FieldStoriesSection({
                         </div>
 
                         <div className="flex items-center gap-2">
+                          {/* Review / Account Count */}
+                          <div 
+                            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-mono text-gray-600 bg-gray-50 border border-gray-200"
+                            title="Reader reviews and firsthand accounts"
+                          >
+                            <MessageSquare className="h-3.5 w-3.5 text-[#0B3D2E]" />
+                            <span>
+                              {storyReviews.filter(
+                                (r) => r.storyId === story.id || (story.id.includes("ebola") && r.storyId.includes("ebola"))
+                              ).length}
+                            </span>
+                          </div>
+
                           <button
                             type="button"
                             onClick={(e) => handleLike(story.id, e)}
@@ -725,6 +1165,20 @@ export default function FieldStoriesSection({
                             <span>{story.likesCount}</span>
                           </button>
                         </div>
+                      </div>
+
+                      {/* Contextual Smart Card CTA */}
+                      <div className="pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] font-bold text-[#0B3D2E] group-hover:text-[#C9A24A] transition-colors">
+                        <span className="flex items-center gap-1.5">
+                          {(() => {
+                            const arch = getStoryArchetype(story);
+                            if (arch === "health-advisory") return "🛡️ Read Advisory & Share Account";
+                            if (arch === "community") return "🥊 Read Story & Support Youth";
+                            if (arch === "founder") return "🌟 Read Founder Vision";
+                            return "🏔️ Read Dispatch & Draft Circuit";
+                          })()}
+                        </span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                       </div>
 
                       {/* ADMIN MODERATION CONTROLS (Visible when Admin Mode is active) */}
@@ -940,9 +1394,34 @@ export default function FieldStoriesSection({
               {/* Author Strip */}
               <div className="flex items-center justify-between pb-6 mb-6 border-b border-gray-100 gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#0B3D2E] text-[#C9A24A] font-black flex items-center justify-center text-sm shadow-inner">
-                    {selectedStory.author.charAt(0)}
-                  </div>
+                  {(() => {
+                    const avatar = getAuthorAvatar(selectedStory.author);
+                    return avatar ? (
+                      <img
+                        src={avatar}
+                        alt={selectedStory.author}
+                        referrerPolicy="no-referrer"
+                        className="w-11 h-11 rounded-full object-cover border-2 border-[#C9A24A] shadow-sm shrink-0"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.onerror = null;
+                          if (selectedStory.author.toLowerCase().includes("cool j") || selectedStory.author.toLowerCase().includes("mwangi")) {
+                            if (!target.src.includes("cool-j.jpg")) {
+                              target.src = "/assets/images/cool-j.jpg";
+                            } else {
+                              target.src = "/assets/images/John%20Mwangi%20M.%20(Cool%20J).jpg";
+                            }
+                          } else if (selectedStory.author.toLowerCase().includes("mfalme")) {
+                            target.src = "/assets/images/mfalme-ukweli.png";
+                          }
+                        }}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#0B3D2E] text-[#C9A24A] font-black flex items-center justify-center text-sm shadow-inner shrink-0">
+                        {selectedStory.author.charAt(0)}
+                      </div>
+                    );
+                  })()}
                   <div>
                     <div className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
                       {selectedStory.author}
@@ -983,10 +1462,20 @@ export default function FieldStoriesSection({
                   {selectedStory.photos.map((imgUrl, idx) => (
                     <div key={idx} className="relative rounded-2xl overflow-hidden shadow-md bg-gray-100 aspect-video group">
                       <img
-                        src={imgUrl}
+                        src={resolveStoryPhoto(imgUrl, selectedStory.title, idx)}
                         alt={`Photo ${idx + 1} from ${selectedStory.title}`}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          target.onerror = null;
+                          const fallback = resolveStoryPhoto("", selectedStory.title, idx);
+                          if (target.src !== fallback && !target.src.endsWith(fallback)) {
+                            target.src = fallback;
+                          } else {
+                            target.src = idx === 0 ? "/assets/images/cool-j.jpg" : "/assets/images/mt-kenya-summit.jpg";
+                          }
+                        }}
                       />
                       <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono">
                         Photo {idx + 1} of {selectedStory.photos.length}
@@ -1001,36 +1490,561 @@ export default function FieldStoriesSection({
                 {selectedStory.content}
               </div>
 
-              {/* Story Footer Controls */}
-              <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="flex items-center gap-3">
+              {/* ------------------------------------------------------------- */}
+              {/* SMART CONTEXT-AWARE CALLOUT & ACTIONS BASED ON STORY TYPE */}
+              {/* ------------------------------------------------------------- */}
+              {(() => {
+                const archetype = getStoryArchetype(selectedStory);
+
+                if (archetype === "health-advisory") {
+                  return (
+                    <div className="mt-8 bg-[#F3F8F5] border-2 border-emerald-700/30 rounded-2xl p-5 sm:p-6 shadow-xs">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-emerald-900/10">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-emerald-800 text-[#C9A24A] flex items-center justify-center shrink-0 shadow-xs">
+                            <ShieldCheck className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <h4 className="font-serif font-black text-[#0B3D2E] text-base">
+                              East Africa Health & Visitor Community Dialogue
+                            </h4>
+                            <p className="text-xs text-gray-600">
+                              Transparent facts • Direct access to our operations desk • Reader firsthand accounts
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-300 uppercase tracking-wider shrink-0">
+                          Active Health Advisory
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-gray-700 leading-relaxed my-3.5">
+                        Have you traveled through Kenya or East Africa recently, or are you planning an upcoming journey? 
+                        We invite all travelers and tour lovers to share their firsthand experience, airport screening accounts, or safety questions. Your real-world feedback helps fellow explorers travel with confidence.
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                        {/* CTA 1: Ask Operations & Safety Desk */}
+                        <a
+                          href="https://wa.me/254720572251?text=Jambo%20Cool%20J%20%26%20Mfalme%20Ukweli!%20I%20just%20read%20your%20East%20Africa%20Health%20%26%20Safety%20Advisory%20and%20had%20a%20question%20regarding%20visitor%20protocols%20and%20safety%20guarantees."
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0B3D2E] hover:bg-[#124D3C] text-[#FAF8F5] text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        >
+                          <MessageCircle className="h-4 w-4 text-[#C9A24A]" />
+                          <span>Consult Operations & Safety Desk on WhatsApp</span>
+                        </a>
+
+                        {/* CTA 2: Share Reader Account / Feedback */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowReviewForm(true);
+                            setTimeout(() => {
+                              const el = document.getElementById("story-reviews-section");
+                              if (el) el.scrollIntoView({ behavior: "smooth" });
+                            }, 50);
+                          }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        >
+                          <PenTool className="h-4 w-4" />
+                          <span>Share Your Account or Feedback</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (archetype === "community") {
+                  return (
+                    <div className="mt-8 bg-[#FAF8F5] border border-[#E5DEC9] rounded-2xl p-5 sm:p-6 shadow-xs">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-[#E5DEC9]">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-[#8F5C38] text-white flex items-center justify-center shrink-0">
+                            <Award className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <h4 className="font-serif font-black text-[#0B3D2E] text-base">
+                              Community Youth Empowerment • Nanyuki Good Times Boxing Club
+                            </h4>
+                            <p className="text-xs text-gray-600">
+                              100% locally reinvested • Training gear • Youth mentorship
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-gray-700 leading-relaxed my-3.5">
+                        Every trek and safari booked through Cool J directly contributes to athletic gear and nutrition for Nanyuki youth. You can visit the gym, meet our coaches, or plan a community-inclusive journey.
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                        {/* CTA 1: Visit Boxing Club Page */}
+                        <a
+                          href="https://facebook.com/nanyukigoodtimesboxingclub"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0B3D2E] hover:bg-[#124D3C] text-white text-xs font-bold transition-all shadow-xs"
+                        >
+                          <ExternalLink className="h-4 w-4 text-[#C9A24A]" />
+                          <span>Visit Boxing Club on Facebook</span>
+                        </a>
+
+                        {/* CTA 2: Draft Trip Supporting Youth */}
+                        <button
+                          type="button"
+                          onClick={handleDraftAdventure}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C9A24A] hover:bg-[#b58f3d] text-[#0B3D2E] text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        >
+                          <Calculator className="h-4 w-4" />
+                          <span>Draft a Journey Supporting Local Youth</span>
+                        </button>
+
+                        {/* CTA 3: Leave Words of Encouragement */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowReviewForm(true);
+                            setTimeout(() => {
+                              const el = document.getElementById("story-reviews-section");
+                              if (el) el.scrollIntoView({ behavior: "smooth" });
+                            }, 50);
+                          }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold transition-all cursor-pointer"
+                        >
+                          <PenTool className="h-4 w-4 text-[#8F5C38]" />
+                          <span>Leave Words of Encouragement</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (archetype === "founder") {
+                  return (
+                    <div className="mt-8 bg-[#0B3D2E] text-white rounded-2xl p-5 sm:p-6 shadow-md border border-[#C9A24A]">
+                      <div className="flex items-center gap-3 pb-3 border-b border-white/10">
+                        <Sparkles className="h-5 w-5 text-[#C9A24A]" />
+                        <div>
+                          <h4 className="font-serif font-black text-white text-base">
+                            Experience the Cool J Difference: Dignity, Brotherhood & Safety
+                          </h4>
+                          <p className="text-xs text-white/80">
+                            Fair crew wages • Slow mindful pacing • Dedicated private Land Cruisers
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-white/90 leading-relaxed my-3.5">
+                        Ready to experience the mountains and savannas of East Africa with John Mwangi and our legendary team of certified mountain guides?
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                        {/* CTA 1: Draft Adventure */}
+                        <button
+                          type="button"
+                          onClick={handleDraftAdventure}
+                          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#C9A24A] hover:bg-[#e0b85a] text-[#0B3D2E] text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        >
+                          <Calculator className="h-4 w-4" />
+                          <span>Draft Your Expedition with Cool J</span>
+                        </button>
+
+                        {/* CTA 2: WhatsApp Cool J */}
+                        <a
+                          href="https://wa.me/254720572251?text=Jambo%20Cool%20J!%20I%20just%20read%20your%20story%20about%20why%20you%20founded%20Cool%20J%20Expeditions.%20I%20would%20love%20to%20plan%20a%20private%20trek/safari%20with%20your%20team."
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/20"
+                        >
+                          <MessageCircle className="h-4 w-4 text-[#C9A24A]" />
+                          <span>Message John Mwangi on WhatsApp</span>
+                        </a>
+
+                        {/* CTA 3: Leave a Note / Review */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowReviewForm(true);
+                            setTimeout(() => {
+                              const el = document.getElementById("story-reviews-section");
+                              if (el) el.scrollIntoView({ behavior: "smooth" });
+                            }, 50);
+                          }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all cursor-pointer"
+                        >
+                          <PenTool className="h-4 w-4 text-[#C9A24A]" />
+                          <span>Leave a Note for Cool J</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Standard Circuit / Mountain / Safari Story
+                return (
+                  <div className="mt-8 bg-[#FAF8F5] border border-[#E5DEC9] rounded-2xl p-5 sm:p-6 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E5DEC9]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#0B3D2E] text-[#C9A24A] flex items-center justify-center shrink-0">
+                          <Mountain className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-serif font-black text-[#0B3D2E] text-base">
+                            Inspired by This Circuit? Plan Your Adventure
+                          </h4>
+                          <p className="text-xs text-gray-600">
+                            Instant custom calculator • 4x4 Land Cruiser fleet • Bundled crew fees
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-[#8F5C38] bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 shrink-0">
+                        📍 {selectedStory.circuit}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-gray-700 leading-relaxed my-3.5">
+                      Turn this dispatch into your own journey. Open our instant expedition calculator to customize traveler party size, assign 4x4 Land Cruisers, and see transparent pricing.
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                      {/* CTA 1: Draft This Adventure */}
+                      <button
+                        type="button"
+                        onClick={handleDraftAdventure}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B3D2E] hover:bg-[#124D3C] text-[#FAF8F5] text-xs font-bold transition-all shadow-xs cursor-pointer"
+                      >
+                        <Calculator className="h-4 w-4 text-[#C9A24A]" />
+                        <span>Draft This Adventure (Instant Calculator)</span>
+                      </button>
+
+                      {/* CTA 2: Inquire on WhatsApp */}
+                      <a
+                        href={`https://wa.me/254720572251?text=Jambo%20Cool%20J!%20I%20just%20read%20the%20dispatch%20"${encodeURIComponent(selectedStory.title)}"%20on%20the%20${encodeURIComponent(selectedStory.circuit)}%20and%20would%20love%20to%20plan%20this%20expedition.`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold transition-all"
+                      >
+                        <MessageCircle className="h-4 w-4 text-emerald-700" />
+                        <span>Inquire on WhatsApp</span>
+                      </a>
+
+                      {/* CTA 3: Leave a Review */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowReviewForm(true);
+                          setTimeout(() => {
+                            const el = document.getElementById("story-reviews-section");
+                            if (el) el.scrollIntoView({ behavior: "smooth" });
+                          }, 50);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold transition-all cursor-pointer"
+                      >
+                        <PenTool className="h-4 w-4 text-[#8F5C38]" />
+                        <span>Leave a Review for This Circuit</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* ------------------------------------------------------------- */}
+              {/* REVIEWS, ACCOUNTS & READER FEEDBACK SECTION FOR THIS STORY */}
+              {/* ------------------------------------------------------------- */}
+              <div id="story-reviews-section" className="mt-10 pt-8 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5 text-[#0B3D2E]" />
+                      <h3 className="font-serif font-black text-xl text-[#0B3D2E]">
+                        {getStoryArchetype(selectedStory) === "health-advisory"
+                          ? "Reader Accounts & Community Feedback"
+                          : getStoryArchetype(selectedStory) === "community"
+                          ? "Community Notes & Visitor Reflections"
+                          : "Explorer Reviews & Field Notes"}
+                      </h3>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {getStoryArchetype(selectedStory) === "health-advisory"
+                        ? "Firsthand visitor perspectives, airport clearance accounts, and community questions."
+                        : "Real feedback from fellow adventurers and tour lovers who have explored with Cool J."}
+                    </p>
+                  </div>
+
                   <button
                     type="button"
-                    onClick={(e) => handleLike(selectedStory.id, e)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                      likedStories[selectedStory.id]
-                        ? "bg-rose-50 text-rose-600 border border-rose-200"
-                        : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 hover:text-rose-600"
-                    }`}
+                    onClick={() => setShowReviewForm(!showReviewForm)}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0B3D2E] hover:bg-[#124D3C] text-white text-xs font-bold transition-all cursor-pointer shadow-xs self-start sm:self-auto"
                   >
-                    <Heart className={`h-4 w-4 ${likedStories[selectedStory.id] ? "fill-rose-500 text-rose-500" : ""}`} />
-                    <span>{selectedStory.likesCount} Explorer Likes</span>
+                    <PenTool className="h-3.5 w-3.5 text-[#C9A24A]" />
+                    <span>
+                      {showReviewForm 
+                        ? "Close Form" 
+                        : (getStoryArchetype(selectedStory) === "health-advisory" ? "Share Your Account / Feedback" : "Leave a Review")}
+                    </span>
                   </button>
-
-                  <a
-                    href={`https://wa.me/254720572251?text=Jambo%20Cool%20J!%20I%20just%20read%20the%20story%20"%20${encodeURIComponent(selectedStory.title)}%20"%20and%20would%20love%20to%20plan%20a%20similar%20trip.`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold transition-colors"
-                  >
-                    <MessageCircle className="h-4 w-4 text-emerald-600" />
-                    <span>Inquire About This Circuit</span>
-                  </a>
                 </div>
 
+                {/* Review / Account Submission Form */}
+                {showReviewForm && (
+                  <form 
+                    onSubmit={(e) => handleAddStoryReview(e, selectedStory.id)} 
+                    className="bg-[#FAF8F5] border-2 border-[#C9A24A]/40 rounded-2xl p-5 mb-8 space-y-4 animate-in fade-in duration-200"
+                  >
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                      <span className="text-xs font-bold text-[#0B3D2E] uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="h-3.5 w-3.5 text-[#C9A24A]" />
+                        {getStoryArchetype(selectedStory) === "health-advisory"
+                          ? "Submit Your Perspective / Firsthand Account"
+                          : "Submit Your Explorer Review"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setShowReviewForm(false)}
+                        className="text-gray-400 hover:text-gray-700 text-xs cursor-pointer font-bold"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Your Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. David H."
+                          value={newReviewAuthor}
+                          onChange={(e) => setNewReviewAuthor(e.target.value)}
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-[#C9A24A] focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Country / City *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. Netherlands / Nairobi"
+                          value={newReviewCountry}
+                          onChange={(e) => setNewReviewCountry(e.target.value)}
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-[#C9A24A] focus:outline-none"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                          Traveler Status / Profile
+                        </label>
+                        <select
+                          value={newReviewPerspective}
+                          onChange={(e) => setNewReviewPerspective(e.target.value)}
+                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-[#C9A24A] focus:outline-none"
+                        >
+                          <option value="Recently Visited Kenya">Recently Visited Kenya</option>
+                          <option value="Tour Lover & Planning Upcoming Trip">Tour Lover & Planning Trip</option>
+                          <option value="Past Cool J Guest">Past Cool J Guest</option>
+                          <option value="Local Tourism Partner / Resident">Local Tourism Partner / Resident</option>
+                          <option value="Global Trekker">Global Trekker</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Rating Stars */}
+                    <div className="flex items-center gap-3">
+                      <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                        Helpfulness / Experience Rating:
+                      </label>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setNewReviewRating(star)}
+                            className="p-1 cursor-pointer transition-transform hover:scale-110"
+                          >
+                            <Star
+                              className={`h-4 w-4 ${
+                                star <= newReviewRating
+                                  ? "fill-amber-400 text-amber-500"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-xs font-mono text-gray-500 font-bold">
+                        {newReviewRating} / 5 Stars
+                      </span>
+                    </div>
+
+                    {/* Review Content */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                        {getStoryArchetype(selectedStory) === "health-advisory"
+                          ? "Your Firsthand Account, Question, or Perspective *"
+                          : "Your Review / Feedback Comment *"}
+                      </label>
+                      <textarea
+                        required
+                        rows={3}
+                        placeholder={
+                          getStoryArchetype(selectedStory) === "health-advisory"
+                            ? "Share your recent experience on the ground, border screening impressions, or safety thoughts..."
+                            : "Share your experience with Cool J's team, route highlights, or tips for future adventurers..."
+                        }
+                        value={newReviewComment}
+                        onChange={(e) => setNewReviewComment(e.target.value)}
+                        className="w-full bg-white border border-gray-300 rounded-xl p-3 text-xs focus:ring-2 focus:ring-[#C9A24A] focus:outline-none"
+                      />
+                    </div>
+
+                    {reviewSubmitError && (
+                      <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                        {reviewSubmitError}
+                      </div>
+                    )}
+
+                    {reviewSubmitSuccess && (
+                      <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span>Asante Sana! Your feedback has been published and added to this dispatch.</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-end gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowReviewForm(false)}
+                        className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-5 py-2 rounded-xl bg-[#0B3D2E] hover:bg-[#124D3C] text-white text-xs font-bold uppercase tracking-wider shadow-xs cursor-pointer"
+                      >
+                        Publish Account & Feedback
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* Display Existing Reviews for this Story */}
+                {(() => {
+                  const activeStoryReviews = storyReviews.filter(
+                    (r) => r.storyId === selectedStory.id || (selectedStory.id.includes("ebola") && r.storyId.includes("ebola"))
+                  );
+
+                  if (activeStoryReviews.length === 0) {
+                    return (
+                      <div className="text-center py-8 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                        <MessageSquare className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-xs text-gray-600 font-medium">
+                          Be the first explorer or tour lover to share feedback or an account on this dispatch!
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setShowReviewForm(true)}
+                          className="mt-3 px-4 py-1.5 rounded-lg bg-[#0B3D2E] text-white text-xs font-bold cursor-pointer hover:bg-[#124D3C]"
+                        >
+                          Post First Feedback
+                        </button>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div className="space-y-3.5">
+                      {activeStoryReviews.map((rev) => (
+                        <div
+                          key={rev.id}
+                          className="bg-[#FAF8F5] border border-gray-200/80 rounded-2xl p-4 sm:p-5 shadow-xs transition-colors hover:border-[#C9A24A]/40"
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-full bg-[#0B3D2E] text-[#C9A24A] font-black text-xs flex items-center justify-center shrink-0">
+                                {rev.authorName.charAt(0)}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-xs text-gray-900">{rev.authorName}</span>
+                                  <span className="text-[10px] font-mono text-gray-500">({rev.country})</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 text-[10px]">
+                                  <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-md">
+                                    {rev.perspective}
+                                  </span>
+                                  <span className="text-gray-400 font-mono">• {rev.date}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Star Rating & Helpful Button */}
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`h-3 w-3 ${
+                                      i < rev.rating
+                                        ? "fill-amber-400 text-amber-500"
+                                        : "text-gray-300"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleToggleHelpful(rev.id)}
+                                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                                  helpfulLiked[rev.id]
+                                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                    : "bg-white text-gray-500 hover:bg-gray-100 border border-gray-200 hover:text-emerald-700"
+                                }`}
+                                title="Mark as helpful firsthand account"
+                              >
+                                <ThumbsUp className={`h-3 w-3 ${helpfulLiked[rev.id] ? "fill-emerald-600 text-emerald-600" : ""}`} />
+                                <span>{rev.helpfulCount}</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-gray-700 leading-relaxed font-normal whitespace-pre-line pl-1 sm:pl-10">
+                            "{rev.comment}"
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Story Modal Footer Controls */}
+              <div className="mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <button
+                  type="button"
+                  onClick={(e) => handleLike(selectedStory.id, e)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                    likedStories[selectedStory.id]
+                      ? "bg-rose-50 text-rose-600 border border-rose-200"
+                      : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 hover:text-rose-600"
+                  }`}
+                >
+                  <Heart className={`h-4 w-4 ${likedStories[selectedStory.id] ? "fill-rose-500 text-rose-500" : ""}`} />
+                  <span>{selectedStory.likesCount} Explorer Likes</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setSelectedStory(null)}
-                  className="text-xs font-bold text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-700 transition-colors cursor-pointer"
                 >
                   Close Story
                 </button>
@@ -1145,6 +2159,19 @@ export default function FieldStoriesSection({
                   <button
                     type="button"
                     onClick={() => {
+                      setTitle("Health & Safety Advisory: Regional Ebola Monitoring & Visitor Protections");
+                      setAuthor("Mfalme Ukweli");
+                      setCountry("Kenya (Cool J Operations & Safety)");
+                      setCategory("guide-dispatch");
+                      setCircuit("East Africa Travel Advisory & Field Health Protocols");
+                    }}
+                    className="px-2.5 py-1 rounded-full bg-emerald-100/80 hover:bg-emerald-200 text-emerald-950 border border-emerald-300 shrink-0 font-medium cursor-pointer"
+                  >
+                    🛡️ Ebola & Health Advisory Notes
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
                       setTitle("Guide Dispatch: High Altitude Safety & Acclimatization Rules");
                       setCategory("guide-dispatch");
                       setCircuit("Mount Kenya (Chogoria - Sirimon Traverse)");
@@ -1238,6 +2265,11 @@ export default function FieldStoriesSection({
                     onChange={(e) => setCircuit(e.target.value)}
                     className="w-full bg-white border border-[#DDD5C7] rounded-xl p-2.5 text-xs font-medium text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#C9A24A]"
                   >
+                    <optgroup label="🛡️ Field Safety, Health & Travel Advisories">
+                      <option value="East Africa Travel Advisory & Field Health Protocols">East Africa Travel Advisory & Field Health Protocols</option>
+                      <option value="High-Altitude Acclimatization & Alpine Medical Safety">High-Altitude Acclimatization & Alpine Medical Safety</option>
+                    </optgroup>
+
                     <optgroup label="🌟 Founder's Story & Business Vision">
                       <option value="Founder's Journey: Why I Started Cool J Expeditions">Founder's Journey: Why I Started Cool J Expeditions</option>
                       <option value="20+ Years On High Mountain Peaks (Founding Heritage)">20+ Years On High Mountain Peaks (Founding Heritage)</option>

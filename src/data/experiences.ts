@@ -1,6 +1,6 @@
 import { Experience } from "../types";
-import teamShiptons from "../assets/images/Trekking Team Resting.jpg";
-import groupCustomers from "../assets/images/Happy Group of Climbers.jpg";
+import teamShiptons from "../assets/images/trekking-team-resting.jpg";
+import groupCustomers from "../assets/images/happy-group-of-climbers.jpg";
 import kilimanjaroTanzania from "../assets/images/mount-kilimanjaro-.jpg";
 import fleetSavanna from "../assets/images/fleet-savanna.jpg";
 import fleetPaved from "../assets/images/fleet-paved.jpg";
@@ -8,8 +8,8 @@ import fleetInterior from "../assets/images/fleet-interior.jpg";
 import fleetLineup from "../assets/images/fleet-tourists-enjoying.jpg";
 import ugandaBwindiImg from "../assets/images/uganda_bwindi_1783435198714.jpg";
 import ngareNdareImg from "../assets/images/ngare_ndare.jpg";
-import lenanaPeak from "../assets/images/Point Lenana Peak Sign.jpg";
-import climberSunset from "../assets/images/Mt Kenya Summit (Hero banner).jpg";
+import lenanaPeak from "../assets/images/point-lenana-peak-sign.jpg";
+import climberSunset from "../assets/images/mt-kenya-summit.jpg";
 import coolJWithHappyTourists from "../assets/images/cool_j_with_happy_tourists.jpg";
 import takingRestInSamburu from "../assets/images/taking_a_rest_in_samburu.jpg";
 import walkWithRanger from "../assets/images/walk_with_ranger.jpg";
@@ -39,7 +39,7 @@ export const EXPERIENCES: Experience[] = [
       "Vast alpine moorlands, Lake Ellis & Lake Michaelson",
       "Sirimon-Chogoria traverse with dedicated chef & porter team"
     ],
-    imagePlaceholder: climberSunset || lenanaPeak
+    imagePlaceholder: climberSunset || "/assets/images/mt-kenya-summit.jpg"
   },
   {
     id: "ol-pejeta",
@@ -58,7 +58,7 @@ export const EXPERIENCES: Experience[] = [
       "Sweetwaters Chimpanzee Sanctuary guided warden tour",
       "Highest predator density in Kenya with lion tracking"
     ],
-    imagePlaceholder: fleetSavanna
+    imagePlaceholder: fleetSavanna || "/assets/images/fleet-savanna.jpg"
   },
   {
     id: "solio-ranch",
@@ -115,7 +115,7 @@ export const EXPERIENCES: Experience[] = [
       "Pioneering rhino anti-poaching and tracking experiences",
       "Spectacular views looking out towards Mount Kenya's northern slopes"
     ],
-    imagePlaceholder: fleetPaved
+    imagePlaceholder: fleetPaved || "/assets/images/fleet-paved.jpg"
   },
   {
     id: "lolldaiga-hills",
@@ -195,7 +195,7 @@ export const EXPERIENCES: Experience[] = [
       "13 clear river systems supporting hippos, lions, and leopards",
       "Dedicated 48 sq km fenced Rhino Sanctuary"
     ],
-    imagePlaceholder: fleetInterior
+    imagePlaceholder: fleetInterior || "/assets/images/fleet-interior.jpg"
   },
   {
     id: "rift-valley-lakes",
@@ -275,7 +275,7 @@ export const EXPERIENCES: Experience[] = [
       "Mzima Springs underwater crystal-clear viewing chamber",
       "Shetani black volcanic lava flows and Ngulia Rhino Sanctuary"
     ],
-    imagePlaceholder: fleetSavanna
+    imagePlaceholder: fleetSavanna || "/assets/images/fleet-savanna.jpg"
   },
   {
     id: "diani-beach-coast",

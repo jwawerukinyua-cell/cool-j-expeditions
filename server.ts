@@ -12,8 +12,40 @@ const PORT = 3000;
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Serve static assets in both development and production
+// Serve static assets from public directory
 app.use(express.static(path.join(process.cwd(), "public")));
+app.use("/assets", express.static(path.join(process.cwd(), "public/assets")));
+app.use("/assets/images", express.static(path.join(process.cwd(), "public/assets/images")));
+
+// Direct safe image alias routes to ensure Cool J & key photos always load flawlessly on public URLs
+app.get([
+  "/assets/images/cool-j.jpg",
+  "/assets/images/john-mwangi-cool-j.jpg",
+  "/assets/images/John%20Mwangi%20M.%20(Cool%20J).jpg",
+  "/assets/images/John Mwangi M. (Cool J).jpg",
+  "/cool-j.jpg"
+], (req, res) => {
+  const p1 = path.join(process.cwd(), "public/assets/images/cool-j.jpg");
+  if (fs.existsSync(p1)) return res.sendFile(p1);
+  const p2 = path.join(process.cwd(), "src/assets/images/cool-j.jpg");
+  if (fs.existsSync(p2)) return res.sendFile(p2);
+  const p3 = path.join(process.cwd(), "public/assets/images/John Mwangi M. (Cool J).jpg");
+  return res.sendFile(p3);
+});
+
+app.get([
+  "/assets/images/mt-kenya-summit.jpg",
+  "/assets/images/mt-kenya-summit-hero.jpg",
+  "/assets/images/Mt%20Kenya%20Summit%20(Hero%20banner).jpg",
+  "/assets/images/Mt Kenya Summit (Hero banner).jpg"
+], (req, res) => {
+  const p1 = path.join(process.cwd(), "public/assets/images/mt-kenya-summit.jpg");
+  if (fs.existsSync(p1)) return res.sendFile(p1);
+  const p2 = path.join(process.cwd(), "src/assets/images/mt-kenya-summit.jpg");
+  if (fs.existsSync(p2)) return res.sendFile(p2);
+  const p3 = path.join(process.cwd(), "public/assets/images/Mt Kenya Summit (Hero banner).jpg");
+  return res.sendFile(p3);
+});
 
 // Initialize Gemini Client with correct user-agent for telemetry
 const ai = new GoogleGenAI({
@@ -261,6 +293,26 @@ let localBookings: any[] = [];
 // Seed Field Stories & Articles
 let localArticles: any[] = [
   {
+    id: "story-ebola-advisory-mfalme",
+    title: "East Africa Health & Safety Advisory: The Regional Ebola Context, Kenya's Contained Case & Visitor Protection Guarantees",
+    author: "Mfalme Ukweli (Team Member, Cool J Expeditions)",
+    country: "Kenya (Cool J Operations & Safety Desk)",
+    authorType: "guide",
+    circuit: "East Africa Travel Advisory & Field Health Protocols",
+    category: "guide-dispatch",
+    readTimeMinutes: 4,
+    summary: "Official dispatch by Cool J Expeditions team member Mfalme Ukweli addressing the regional Ebola situation in East Africa, the facts surrounding the single isolated case identified in Kenya, and our multi-layered protocols ensuring every visitor stays safe, protected, and cared for.",
+    content: "Jambo travelers and dear explorers,\n\nI am Mfalme Ukweli, a proud team member of Cool J Expeditions. As part of our leadership and field operations team, my number one responsibility—alongside our founder John Mwangi (Cool J)—is ensuring that every guest steps into Kenya with complete peace of mind, scientific clarity, and uncompromising safety.\n\nWith news circulating regarding the Ebola situation in parts of East Africa, we believe in total transparency rather than silence. Here is the accurate, up-to-date situation on the ground, the facts regarding Kenya, and the concrete protective measures Cool J Expeditions enforces for every single traveler.\n\n### 1. The Regional Context in East Africa\nOver recent months, regional health authorities and the World Health Organization (WHO AFRO) have maintained active surveillance around historical cross-border corridors in neighboring Uganda and the DRC. Both regional governments and international health teams have deployed rapid-response contact tracing and surveillance infrastructure far superior to previous decades. East African borders and international airports operate with enhanced thermal screening and digital health manifests.\n\n### 2. The Single Case Identified in Kenya: Swift Containment & Zero Spread\nRecently, one isolated case was identified at a medical screening facility in Kenya. Here is what international visitors must know:\n- Immediate Isolation: The individual was identified early and immediately admitted to a specialized, secure high-containment infectious disease unit in Nairobi.\n- Extensive Contact Tracing: The Kenya Ministry of Health, in direct coordination with the WHO, executed exhaustive contact tracing.\n- Zero Community Transmission: No secondary infections or community transmissions have been detected anywhere in Kenya.\n- Open & Normal Operations: Kenya's national parks, Mount Kenya trails, wildlife conservancies in Laikipia and Samburu, and international transit hubs remain fully open, safe, and operating normally under standard global health standards.\n\n### 3. How Cool J Expeditions Protects Our Visitors\nAt Cool J Expeditions, we don't just follow government minimums—we hold ourselves to a gold standard of mountain and safari hygiene:\n\n1. Exclusive Private 4x4 Land Cruisers (No Crowded Tour Buses): We never pack 30 strangers into shared buses. Your expedition vehicle is reserved solely for your private group or family, thoroughly sanitized inside and out before your arrival and wiped down daily with hospital-grade disinfectants.\n2. Hand Sanitization & Hygiene Stations: Every Cool J safari vehicle, mountain mess tent, and camp check-in is equipped with automatic/touch-free hand sanitizer dispensers (70%+ alcohol) and clean washing stations.\n3. Health-Screened & Certified Field Crew: All our lead guides, safari drivers, mountain chefs, and porters undergo daily non-invasive wellness checks and temperature monitoring. Our crew is trained in international WHO food hygiene and biosafety standards.\n4. Pure Mountain Water & Sealed Dining: Our mountain cooks only serve thoroughly cooked, hot meals prepared in sanitized mobile camp kitchens. All drinking water is boiled and micro-filtered, and fresh produce is sourced from verified organic farms and washed with purified water.\n5. AMREF Flying Doctors Emergency Evacuation: Every high-altitude Mount Kenya summit trek and remote wilderness safari includes pre-arranged medical evacuation coverage. In the rare event an explorer feels unwell, emergency airlift response to premier tertiary medical centers in Nairobi is guaranteed.\n6. 100% Flexible Rebooking Policy: If travel regulations change or you ever feel hesitant, Cool J Expeditions offers seamless date changes without punitive cancellation penalties.\n\nYour safety is not an afterthought—it is the foundation of every summit triumph and savanna memory we create together. If you have questions before landing at JKIA, reach out to me or Cool J directly on WhatsApp at +254 720 572 251.\n\nKaribuni Kenya, walk with confidence, and let's explore this magnificent land together safely!\n\n— Mfalme Ukweli\nTeam Member & Operations Desk\nCool J Expeditions — Nanyuki, Mount Kenya",
+    photos: [
+      "/assets/images/ebola-virus.jpg",
+      "/assets/images/mfalme-ukweli.png"
+    ],
+    date: "2026-10-08",
+    likesCount: 86,
+    isFeatured: true,
+    status: "approved"
+  },
+  {
     id: "story-founder-1",
     title: "Why I Founded Cool J Expeditions: 20+ Years From High Mountain Porter to Lead Expedition Leader",
     author: "John Mwangi (Cool J)",
@@ -272,8 +324,8 @@ let localArticles: any[] = [
     summary: "The personal story behind Cool J Expeditions: growing up in the foothills of Mount Kenya, witnessing how big agencies treated mountain crew, and building a company rooted in dignity, fair wages, and genuine brotherhood.",
     content: "Growing up in the shadow of Mount Kenya in Nanyuki, Kirinyaga (the mountain of brightness) was not just scenery—it was our backyard, our teacher, and our spirit. Over 20 years ago, I began like many young men in our community: carrying heavy packs as a mountain porter in freezing rains.\n\nDuring those early years, I saw something that stayed with me forever. Big international booking agencies were charging travelers thousands of dollars, yet the local porters and mountain cooks who carried the fuel, set up the tents in sub-zero winds, and cooked hot meals at 4,200m were often underpaid, given inadequate cold-weather gear, and treated as invisible numbers.\n\nI made a solemn promise to myself and my community: **One day, I will create an expedition outfit built on dignity, brotherhood, and supreme mountain professionalism.**\n\nWhen I founded **Cool J Expeditions**, I built it on three personal pillars:\n\n1. **Dignity & Fair Living Wages for Mountain Crews:** Every porter, chef, and assistant guide on a Cool J trek receives fair, industry-leading wages, proper high-altitude alpine gear, balanced nutrition, and full medical coverage on the mountain. When the crew is happy, well-rested, and respected, the energy on the trail is joyous, and summits are safe.\n\n2. **Private, Tailored Expeditions Over Mass Tourism:** We don't herd 30 strangers into noisy buses. Every guest gets a dedicated private 4x4 safari vehicle or personalized trekking pace. We climb *'Pole Pole'* (slowly, mindfully) because the mountain deserves reverence, not haste.\n\n3. **Reinvesting in Our Hometown:** Supporting the **Nanyuki Good Times Boxing Club** and local youth training initiatives isn't marketing—it is our duty to the young boys and girls of Laikipia County.\n\nTo every explorer who has stood with me at Point Lenana or watched elephants walk beneath Kilimanjaro: thank you for being part of our family. Karibuni sana!",
     photos: [
-      "/assets/images/John Mwangi M. (Cool J).jpg",
-      "/assets/images/Mt Kenya Summit (Hero banner).jpg"
+      "/assets/images/cool-j.jpg",
+      "/assets/images/mt-kenya-summit.jpg"
     ],
     date: "2026-08-10",
     likesCount: 94,
@@ -292,8 +344,8 @@ let localArticles: any[] = [
     summary: "Stepping out from Austrian Hut at 3:30 AM under a canopy of southern hemisphere stars, the glacier wind felt electric. Cool J set the pace with quiet 'Pole Pole' rhythm.",
     content: "Stepping out from the mountain shelter at 3:30 AM under a canopy of southern hemisphere stars, the glacier wind felt electric. Our lead guide Cool J set the pace with that quiet, reassuring 'Pole Pole' rhythm that kept our breathing steady. \n\nBy 6:15 AM, as the golden rim of the sun broke over the sea of clouds below Point Lenana, the entire African continent seemed to wake up beneath our feet. Mount Kilimanjaro appeared like a floating ice island 200 miles south.\n\nOur advice to anyone attempting this: trust Cool J's team on hydration, pack a quality thermal headlamp, and take in every moment of the Gorges Valley on the Chogoria descent!",
     photos: [
-      "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80"
+      "/assets/images/point-lenana-peak-sign.jpg",
+      "/assets/images/mt-kenya-summit.jpg"
     ],
     date: "2026-06-12",
     likesCount: 38,
@@ -312,8 +364,8 @@ let localArticles: any[] = [
     summary: "In 20+ years of leading summits, the secret to reaching 4,985m comfortably isn't physical brute force—it's respecting the mountain's rhythm.",
     content: "Jambo climbers! Over my two decades leading teams up Batian, Nelion, and Point Lenana, the number one mistake I see is rushing the approach. Mount Kenya is deceptive; you gain altitude very quickly from the Sirimon gate.\n\nHere are three non-negotiables we practice on every Cool J Expedition:\n1. **Climb High, Sleep Low:** On Day 3 at Shipton's Camp (4,200m), we do a gentle afternoon acclimatization hike up to Kami Tarn before descending back down to sleep.\n2. **4 Liters of Mountain Water:** Altitude strips moisture rapidly. Our camp chefs prepare warm ginger-infused lemon tea at every stop.\n3. **Proper Layering:** Temperatures swing from +22°C in the forest to -8°C at the summit ridge. Never wear cotton—stick to merino wool base layers and windproof shells.\n\nKaribu Mount Kenya—the mountain will welcome you if you walk with respect.",
     photos: [
-      "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
+      "/assets/images/trekking-team-resting.jpg",
+      "/assets/images/happy-group-of-climbers.jpg"
     ],
     date: "2026-07-04",
     likesCount: 64,
@@ -332,8 +384,8 @@ let localArticles: any[] = [
     summary: "Walking high above the indigenous canopy on suspended rope bridges, then jumping into crystal blue glacial waterfalls with armed KFS rangers.",
     content: "If you are in Nanyuki, do NOT miss Ngare Ndare. We spent the morning walking 450 meters along the suspended wooden canopy walkway, watching black-and-white colobus monkeys leap through ancient cedar branches.\n\nAfterwards, our ranger led us down to the hidden waterfalls. The water originates straight from the Mount Kenya glaciers—freezing cold, but swimming in those azure turquoise natural pools was the most refreshing highlight of our entire Kenya trip!\n\nCool J arranged our 4x4 cruiser, packed organic local lunch boxes, and secured all KFS permits beforehand.",
     photos: [
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=1200&q=80"
+      "/assets/images/ngare_ndare.jpg",
+      "/assets/images/cool_j_with_happy_tourists.jpg"
     ],
     date: "2026-07-28",
     likesCount: 29,
@@ -352,8 +404,8 @@ let localArticles: any[] = [
     summary: "Sustainable tourism means investing directly into local community talent. How your bookings support training gear and mentorship for Nanyuki youth.",
     content: "Every journey booked with Cool J Expeditions creates a ripple effect in our hometown of Nanyuki. In addition to fair wages, mountain safety gear, and healthcare for our high-altitude porter and chef collectives, we are proud long-term direct supporters of the **Nanyuki Good Times Boxing Club**.\n\nThe boxing club provides free athletic training, discipline, mentorship, and safe recreational spaces for hundreds of young boys and girls in Laikipia County. When you trek with us, a portion of our logistics proceeds helps sponsor training gloves, headgear, tournament travel, and nutritious meals for these dedicated athletes.\n\nWe welcome our visiting explorers to visit the gym or learn more via their official Facebook page!",
     photos: [
-      "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80"
+      "/assets/images/nanyuki_good_times_boxing.jpg",
+      "/assets/images/cool-j.jpg"
     ],
     date: "2026-08-05",
     likesCount: 52,
@@ -591,6 +643,37 @@ app.post("/api/articles/:id/like", (req, res) => {
 });
 
 
+// WEATHER PROXY ENDPOINT WITH TIMEOUT AND GRACEFUL ERROR HANDLING
+app.get("/api/weather", async (req, res) => {
+  try {
+    const { latitude, longitude, current, daily, timezone } = req.query;
+    if (!latitude || !longitude) {
+      return res.status(400).json({ error: "latitude and longitude are required" });
+    }
+    const params = new URLSearchParams();
+    params.set("latitude", String(latitude));
+    params.set("longitude", String(longitude));
+    if (current) params.set("current", String(current));
+    if (daily) params.set("daily", String(daily));
+    if (timezone) params.set("timezone", String(timezone));
+
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+
+    const openMeteoRes = await fetch(apiUrl, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if (!openMeteoRes.ok) {
+      return res.status(502).json({ error: "Upstream weather provider returned error" });
+    }
+    const data = await openMeteoRes.json();
+    return res.json(data);
+  } catch (_err) {
+    return res.status(502).json({ error: "Failed to fetch weather telemetry upstream" });
+  }
+});
+
 // 3. SECURE BOOKING REQUEST CREATOR
 app.post("/api/booking/quote", (req, res) => {
   const { region, activity, duration, budget, startDate, guestsCount, clientName, clientEmail, clientPhone } = req.body;
@@ -614,10 +697,35 @@ app.post("/api/booking/quote", (req, res) => {
   const vehiclesNeeded = Math.ceil(numGuests / 6); // 6 guests max per safari Land Cruiser for window seating
   const regLower = (region || "").toLowerCase();
 
+  // Destination-specific Land Cruiser rate calculation ($250 to $350 per day depending on terrain and distance)
+  const getLandCruiserDailyRate = (regionName: string): number => {
+    const reg = (regionName || "").toLowerCase();
+    if (reg.includes("uganda") || reg.includes("gorilla") || reg.includes("bwindi")) return 350;
+    if (reg.includes("tanzania") || reg.includes("kilimanjaro") || reg.includes("serengeti")) return 350;
+    if (reg.includes("combo") || reg.includes("multi-country") || reg.includes("cross-border")) return 350;
+    if (reg.includes("masai mara") || reg.includes("safaris") || reg.includes("mara")) return 340;
+    if (reg.includes("tsavo")) return 320;
+    if (reg.includes("diani") || reg.includes("coast")) return 320;
+    if (reg.includes("amboseli")) return 320;
+    if (reg.includes("meru") || reg.includes("elsa")) return 290;
+    if (reg.includes("samburu") || reg.includes("buffalo springs") || reg.includes("shaba")) return 290;
+    if (reg.includes("lewa") || reg.includes("borana")) return 280;
+    if (reg.includes("nakuru") || reg.includes("naivasha") || reg.includes("hell's gate")) return 280;
+    if (reg.includes("aberdare")) return 270;
+    if (reg.includes("lolldaiga")) return 260;
+    if (reg.includes("solio")) return 250;
+    if (reg.includes("ngare ndare") || reg.includes("canopy") || reg.includes("waterfall")) return 250;
+    if (reg.includes("ol pejeta") || reg.includes("sweetwaters") || reg.includes("nanyuki") || reg.includes("laikipia")) return 250;
+    if (reg.includes("mount kenya") || reg.includes("lenana") || reg.includes("sirimon") || reg.includes("chogoria")) return 250;
+    return 280;
+  };
+
+  const cruiserDailyRate = getLandCruiserDailyRate(region);
+
   // REGION SPECIFIC CALCULATION ENGINE (Accommodations & meals self-arranged by default, crew is all-inclusive)
   if (regLower.includes("ngare ndare") || regLower.includes("canopy") || regLower.includes("waterfall")) {
     const entryFeePerDay = 40;
-    const cruiserRatePerDay = 170;
+    const cruiserRatePerDay = cruiserDailyRate; // $250
     const inclusiveCrewPerDay = 45;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -627,7 +735,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("solio")) {
     const entryFeePerDay = 80;
-    const cruiserRatePerDay = 180;
+    const cruiserRatePerDay = cruiserDailyRate; // $250
     const inclusiveCrewPerDay = 45;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -637,7 +745,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("aberdare")) {
     const entryFeePerDay = 52;
-    const cruiserRatePerDay = 180;
+    const cruiserRatePerDay = cruiserDailyRate; // $270
     const inclusiveCrewPerDay = 45;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -647,7 +755,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("lolldaiga")) {
     const entryFeePerDay = 50;
-    const cruiserRatePerDay = 170;
+    const cruiserRatePerDay = cruiserDailyRate; // $260
     const inclusiveCrewPerDay = 45;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -657,7 +765,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("meru national park") || regLower.includes("elsa")) {
     const entryFeePerDay = 60;
-    const cruiserRatePerDay = 190;
+    const cruiserRatePerDay = cruiserDailyRate; // $290
     const inclusiveCrewPerDay = 50;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -667,7 +775,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("samburu") || regLower.includes("buffalo springs") || regLower.includes("shaba")) {
     const entryFeePerDay = 80;
-    const cruiserRatePerDay = 190;
+    const cruiserRatePerDay = cruiserDailyRate; // $290
     const inclusiveCrewPerDay = 50;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -677,7 +785,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("lewa") || regLower.includes("borana")) {
     const entryFeePerDay = 130;
-    const cruiserRatePerDay = 200;
+    const cruiserRatePerDay = cruiserDailyRate; // $280
     const inclusiveCrewPerDay = 60;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -687,7 +795,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("nakuru") || regLower.includes("naivasha") || regLower.includes("hell's gate")) {
     const entryFeePerDay = 70;
-    const cruiserRatePerDay = 180;
+    const cruiserRatePerDay = cruiserDailyRate; // $280
     const inclusiveCrewPerDay = 45;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -697,7 +805,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("amboseli")) {
     const entryFeePerDay = 100;
-    const cruiserRatePerDay = 200;
+    const cruiserRatePerDay = cruiserDailyRate; // $320
     const inclusiveCrewPerDay = 50;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -707,7 +815,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("tsavo")) {
     const entryFeePerDay = 52;
-    const cruiserRatePerDay = 200;
+    const cruiserRatePerDay = cruiserDailyRate; // $320
     const inclusiveCrewPerDay = 50;
 
     const entryCost = entryFeePerDay * parsingDays * numGuests;
@@ -716,10 +824,10 @@ app.post("/api/booking/quote", (req, res) => {
     totalAmount = Math.ceil(entryCost + transportCost + bundledCrew);
 
   } else if (regLower.includes("diani") || regLower.includes("coast")) {
-    const transferPerGuest = 60;
+    const cruiserRatePerDay = cruiserDailyRate; // $320
     const inclusiveCrewPerDay = 35;
 
-    const transportCost = transferPerGuest * numGuests;
+    const transportCost = cruiserRatePerDay * parsingDays * vehiclesNeeded;
     const bundledCrew = inclusiveCrewPerDay * parsingDays;
     totalAmount = Math.ceil(transportCost + bundledCrew);
 
@@ -738,12 +846,13 @@ app.post("/api/booking/quote", (req, res) => {
 
     const bundledCrewAndLogistics = Math.ceil(baseRatePerDay * parsingDays * numGuests * budgetMultiplier);
     const parkFeesCost = Math.ceil(parkFeesPerDay * parsingDays * numGuests);
-    const transportCost = Math.ceil(90 * vehiclesNeeded);
+    // Dedicated 4x4 Land Cruiser mountain trailhead transfer & roadhead track support ($250 per vehicle)
+    const transportCost = Math.ceil(cruiserDailyRate * vehiclesNeeded);
     totalAmount = bundledCrewAndLogistics + parkFeesCost + transportCost;
 
   } else if (regLower.includes("nanyuki") || regLower.includes("laikipia") || regLower.includes("ol pejeta")) {
     const entryFeePerDay = 110;
-    const cruiserVehicleRatePerDay = 180;
+    const cruiserVehicleRatePerDay = cruiserDailyRate; // $250
     const inclusiveCrewPerDay = 50;
 
     const entryCost = Math.ceil(entryFeePerDay * parsingDays * numGuests);
@@ -753,7 +862,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("masai mara") || regLower.includes("safaris")) {
     const maraEntryFeePerDay = 150;
-    const cruiserVehicleRatePerDay = 220;
+    const cruiserVehicleRatePerDay = cruiserDailyRate; // $340
     const inclusiveCrewPerDay = 55;
 
     const entryCost = Math.ceil(maraEntryFeePerDay * parsingDays * numGuests);
@@ -775,12 +884,13 @@ app.post("/api/booking/quote", (req, res) => {
 
     const bundledCrewAndLogistics = Math.ceil(baseCrewRatePerDay * parsingDays * numGuests * budgetMultiplier);
     const parkFeesCost = Math.ceil(parkFeesPerDay * parsingDays * numGuests);
-    const transportCost = Math.ceil(150 * vehiclesNeeded);
+    // Cross-border expedition 4x4 cruiser transfer & trailhead support ($350)
+    const transportCost = Math.ceil(cruiserDailyRate * vehiclesNeeded);
     totalAmount = bundledCrewAndLogistics + parkFeesCost + transportCost;
 
   } else if (regLower.includes("uganda") || regLower.includes("gorilla")) {
     const gorillaPermitCost = 800;
-    const cruiserVehicleRatePerDay = 200;
+    const cruiserVehicleRatePerDay = cruiserDailyRate; // $350
     const localRangerGuidePerDay = 50;
 
     const permitCostTotal = gorillaPermitCost * numGuests;
@@ -789,7 +899,7 @@ app.post("/api/booking/quote", (req, res) => {
 
   } else if (regLower.includes("combo") || regLower.includes("multi-country")) {
     const permitAndParkDaily = 220;
-    const cruiserVehicleRatePerDay = 220;
+    const cruiserVehicleRatePerDay = cruiserDailyRate; // $350
     const inclusiveCrewPerDay = 60;
 
     const parkCost = Math.ceil(permitAndParkDaily * Math.min(parsingDays, 4) * numGuests);
@@ -828,6 +938,8 @@ app.post("/api/booking/quote", (req, res) => {
     guestsCount: numGuests,
     startDate: startDate || "To be scheduled",
     amount: totalAmount,
+    vehiclesNeeded,
+    cruiserDailyRate,
     status: "Pending Deposit",
     createdDate: new Date().toISOString()
   };
@@ -1003,28 +1115,176 @@ app.post("/api/upload-media", async (req, res) => {
   }
 });
 
+// Explicit route for sitemap.xml to guarantee proper XML headers for Google Search Console and crawlers
+app.get('/sitemap.xml', (_req, res) => {
+  const sitemapPath = fs.existsSync(path.join(process.cwd(), 'public/sitemap.xml'))
+    ? path.join(process.cwd(), 'public/sitemap.xml')
+    : path.join(process.cwd(), 'dist/sitemap.xml');
+  if (fs.existsSync(sitemapPath)) {
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(sitemapPath);
+  }
+  res.status(404).send('Sitemap not found');
+});
+
+// Explicit route for robots.txt
+app.get('/robots.txt', (_req, res) => {
+  const robotsPath = fs.existsSync(path.join(process.cwd(), 'public/robots.txt'))
+    ? path.join(process.cwd(), 'public/robots.txt')
+    : path.join(process.cwd(), 'dist/robots.txt');
+  if (fs.existsSync(robotsPath)) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    return res.sendFile(robotsPath);
+  }
+  res.status(404).send('robots.txt not found');
+});
+
+// Explicit route for compiled CSS to guarantee instantaneous styling
+app.get('/assets/style.css', (_req, res) => {
+  const dirs = [path.join(process.cwd(), 'dist/assets'), path.join(process.cwd(), 'public/assets')];
+  for (const dir of dirs) {
+    if (fs.existsSync(dir)) {
+      const files = fs.readdirSync(dir);
+      const cssFile = files.find(f => f.startsWith('index-') && f.endsWith('.css')) || files.find(f => f === 'style.css');
+      if (cssFile) {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+        return res.sendFile(path.join(dir, cssFile));
+      }
+    }
+  }
+  res.status(404).send('Not found');
+});
+
+// Universal static asset serving for public and assets directories
+app.use(express.static(path.join(process.cwd(), 'public')));
+app.use('/assets', express.static(path.join(process.cwd(), 'public/assets')));
+app.use('/assets', express.static(path.join(process.cwd(), 'src/assets')));
+app.use('/assets/images', express.static(path.join(process.cwd(), 'public/assets/images')));
+app.use('/assets/images', express.static(path.join(process.cwd(), 'src/assets/images')));
+
+// Helper to reliably find any image even with URI encoding, space/hyphen differences, or casing differences
+function findImageFile(filename: string): string | null {
+  const dirs = [
+    path.join(process.cwd(), 'public/assets/images'),
+    path.join(process.cwd(), 'src/assets/images'),
+    path.join(process.cwd(), 'dist/assets/images'),
+    path.join(process.cwd(), 'public'),
+    path.join(process.cwd(), 'dist'),
+  ];
+  const decoded = decodeURIComponent(filename);
+  const cleanName = path.basename(decoded);
+  const normalized = cleanName.toLowerCase().replace(/[\s_-]+/g, '');
+
+  for (const dir of dirs) {
+    if (!fs.existsSync(dir)) continue;
+    const exact = path.join(dir, cleanName);
+    if (fs.existsSync(exact) && fs.statSync(exact).isFile()) return exact;
+
+    try {
+      const files = fs.readdirSync(dir);
+      for (const f of files) {
+        if (f.toLowerCase() === cleanName.toLowerCase()) {
+          return path.join(dir, f);
+        }
+        const fNorm = f.toLowerCase().replace(/[\s_-]+/g, '');
+        if (fNorm === normalized) {
+          return path.join(dir, f);
+        }
+      }
+    } catch (_) {}
+  }
+  return null;
+}
+
+// Fallback image resolver: ensures broken image icons are NEVER displayed to visitors
+app.get('/assets/images/:file', (req, res, next) => {
+  const found = findImageFile(req.params.file);
+  if (found) {
+    return res.sendFile(found);
+  }
+  // If a requested image is missing or not yet uploaded, gracefully serve authentic summit fallback
+  const fallback = path.join(process.cwd(), 'public/assets/images/mt-kenya-summit.jpg');
+  if (fs.existsSync(fallback)) {
+    return res.sendFile(fallback);
+  }
+  next();
+});
+
+app.get('/assets/:file', (req, res, next) => {
+  if (req.params.file.match(/\.(jpg|jpeg|png|webp|svg)$/i)) {
+    const found = findImageFile(req.params.file);
+    if (found) {
+      return res.sendFile(found);
+    }
+  }
+  next();
+});
+
 // Serve web apps correctly depending on environment
 async function startServer() {
   // Vite integration
   if (process.env.NODE_ENV !== "production") {
+    // Provide a dummy client for @vite/client that properly injects styles while preventing WebSocket connection failures
+    app.get('/@vite/client', (req, res) => {
+      res.type('application/javascript').send(
+        `export function createHotContext() { return { accept: () => {}, prune: () => {}, dispose: () => {}, decline: () => {}, invalidate: () => {}, on: () => {}, send: () => {} }; }
+export const updateStyle = (id, content) => {
+  try {
+    let style = document.getElementById(id);
+    if (!style) {
+      style = document.createElement('style');
+      style.id = id;
+      style.setAttribute('type', 'text/css');
+      document.head.appendChild(style);
+    }
+    style.textContent = content;
+  } catch (e) {
+    console.error('Failed to update style:', e);
+  }
+};
+export const removeStyle = (id) => {
+  try {
+    const style = document.getElementById(id);
+    if (style) style.remove();
+  } catch (e) {}
+};
+`
+      );
+    });
+
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
+      server: { middlewareMode: true, hmr: false },
+      appType: "custom",
     });
     app.use(vite.middlewares);
 
     // Explicit SPA fallback with Vite HTML transformation
     app.use('*', async (req, res, next) => {
       const url = req.originalUrl;
-      if (url.startsWith('/api')) {
+      if (
+        url.startsWith('/api') || 
+        url.startsWith('/@') || 
+        url.startsWith('/node_modules') ||
+        url.startsWith('/src/') ||
+        url.startsWith('/assets/') ||
+        url.includes('__vite')
+      ) {
         return next();
+      }
+      // Never send index.html for static asset requests
+      if (req.path.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|css|js|mjs|map|woff2?|ttf|eot|json)$/i)) {
+        return res.status(404).end("Asset not found");
       }
       try {
         const indexHtmlPath = path.resolve(process.cwd(), 'index.html');
         if (fs.existsSync(indexHtmlPath)) {
           let template = fs.readFileSync(indexHtmlPath, 'utf-8');
           template = await vite.transformIndexHtml(url, template);
+          // Strip Vite client injection in cloud sandbox so browser never attempts non-existent WebSocket connections
+          template = template.replace(/<script type="module" src="\/@vite\/client"><\/script>/gi, '');
           res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
           return;
         }
@@ -1036,6 +1296,12 @@ async function startServer() {
   } else if (!process.env.VERCEL) {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(path.join(process.cwd(), 'public')));
+    app.use('/assets', express.static(path.join(distPath, 'assets')));
+    app.use('/assets', express.static(path.join(process.cwd(), 'public/assets')));
+    app.use('/assets', express.static(path.join(process.cwd(), 'src/assets')));
+    app.use('/assets/images', express.static(path.join(distPath, 'assets/images')));
+    app.use('/assets/images', express.static(path.join(process.cwd(), 'public/assets/images')));
+    app.use('/assets/images', express.static(path.join(process.cwd(), 'src/assets/images')));
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

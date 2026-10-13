@@ -1,14 +1,31 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VD0VZM7X0"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-5VD0VZM7X0');
+      // Suppress harmless dev-mode HMR websocket closure errors in cloud sandbox
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event && event.reason && (
+          (event.reason.message && (event.reason.message.includes('WebSocket') || event.reason.message.includes('ws'))) ||
+          (typeof event.reason === 'string' && event.reason.includes('WebSocket'))
+        )) {
+          event.preventDefault();
+        }
+      });
+    </script>
+    <!-- Google tag (gtag.js) - loaded only on live production domain to prevent ad-blocker network block errors in dev/preview -->
+    <script>
+      (function() {
+        if (typeof window !== 'undefined' && (window.location.hostname === 'cooljexpeditions.co.ke' || window.location.hostname.endsWith('.co.ke'))) {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5VD0VZM7X0';
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-5VD0VZM7X0');
+        }
+      })();
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,7 +41,7 @@
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="google-site-verification" content="KQECkKdx9bPBOJ0jXuN9IPm1JudOADuDt2XcL80Xg5U" />
     <meta name="theme-color" content="#07241B" />
-    <link rel="canonical" href="https://cooljexpeditions.co.ke/" />
+    <link rel="canonical" href="https://www.cooljexpeditions.co.ke/" />
 
     <!-- GEO / Local Engine Optimization (East Africa & Kenya Geolocation) -->
     <meta name="geo.region" content="KE-31" />
@@ -36,7 +53,7 @@
     <!-- Open Graph / WhatsApp / Facebook / LinkedIn Link Preview -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Cool J Expeditions" />
-    <meta property="og:url" content="https://cooljexpeditions.co.ke/" />
+    <meta property="og:url" content="https://www.cooljexpeditions.co.ke/" />
     <meta property="og:title" content="Cool J Expeditions | Premium Kenya Safaris & Mt. Kenya Climbs" />
     <meta property="og:description" content="Premium Kenya safaris, Mount Kenya climbs, and East Africa expeditions led by expert guide Cool J. Authentic private tours operated from Nanyuki." />
     <meta property="og:locale" content="en_US" />
@@ -172,7 +189,7 @@
       (function() {
         try {
           var origin = window.location.origin;
-          if (origin && !origin.includes('file://')) {
+          if (origin && !origin.includes('file://') && origin !== 'null') {
             // Sync canonical URL with live host
             var canonicalEl = document.querySelector('link[rel="canonical"]');
             if (canonicalEl) {
@@ -202,9 +219,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/style.css">
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-[#FAF8F5] text-[#1a1a1a]">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #FAF8F5; color: #0b3d2e; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="text-align: center; padding: 24px;">
+          <div style="font-size: 36px; margin-bottom: 12px;">🏔️</div>
+          <div style="font-size: 22px; font-weight: 800; letter-spacing: 0.05em; color: #0b3d2e; margin-bottom: 8px; font-family: Georgia, serif;">COOL J EXPEDITIONS</div>
+          <div style="font-size: 14px; color: #C9A24A; font-weight: 600; letter-spacing: 0.02em;">Loading portal & expedition circuits...</div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

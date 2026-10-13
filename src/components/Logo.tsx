@@ -1,6 +1,6 @@
 import React from "react";
-import logoWhite from "../assets/images/logo white.jpg";
-import logoBlack from "../assets/images/logo black.jpg";
+import logoWhite from "../assets/images/logo-white.jpg";
+import logoBlack from "../assets/images/logo-black.jpg";
 
 interface LogoProps {
   className?: string;
@@ -18,6 +18,10 @@ export default function Logo({ className = "h-14", variant = "light" }: LogoProp
         alt="Cool J Expeditions Logo"
         className="h-12 w-auto object-contain transition-all duration-300 hover:scale-105"
         referrerPolicy="no-referrer"
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = "/cool-j-logo.jpg";
+        }}
       />
       <div className="flex flex-col text-left">
         <span className="font-serif font-black text-base sm:text-lg text-[#0b3d2e] leading-tight tracking-tight uppercase">

@@ -7,25 +7,30 @@ interface MpesaSimModalProps {
   onClose: () => void;
   usdAmount: number;
   quoteId: string;
+  customKesAmount?: number;
 }
 
-export default function MpesaSimModal({ isOpen, onClose, usdAmount, quoteId }: MpesaSimModalProps) {
+export default function MpesaSimModal({ isOpen, onClose, usdAmount, quoteId, customKesAmount }: MpesaSimModalProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [payStep, setPayStep] = useState<"input" | "stk-ping" | "pin-entry" | "polling" | "receipt">("input");
   const [pin, setPin] = useState("");
+  const [pinError, setPinError] = useState("");
   const [pollingSeconds, setPollingSeconds] = useState(3);
   const [receipt, setReceipt] = useState<MpesaReceipt | null>(null);
 
-  // KES Exchange Rate conversion (Set to 10 KES for seamless testing as requested)
-  const kesAmount = 10;
+  // KES Exchange Rate conversion (1 USD = 130 KES, or passed directly from calculator)
+  const exchangeRate = 130;
+  const kesAmount = customKesAmount && customKesAmount > 0 ? customKesAmount : Math.ceil(usdAmount * exchangeRate);
 
   useEffect(() => {
     if (!isOpen) {
       // resets
       setPayStep("input");
       setPhoneNumber("");
+      setPhoneError("");
       setPin("");
+      setPinError("");
       setReceipt(null);
     }
   }, [isOpen]);
@@ -50,8 +55,10 @@ export default function MpesaSimModal({ isOpen, onClose, usdAmount, quoteId }: M
 
   const handlePinSubmit = () => {
     if (pin.length < 4) {
-      return alert("M-Pesa PIN is typically 4 or 5 digits.");
+      setPinError("M-Pesa PIN is typically 4 or 5 digits.");
+      return;
     }
+    setPinError("");
     setPayStep("polling");
 
     // Poll endpoint representation
@@ -106,7 +113,7 @@ export default function MpesaSimModal({ isOpen, onClose, usdAmount, quoteId }: M
                 <div>
                   <h4 className="text-sm font-bold text-emerald-950">Lipa na M-Pesa Express</h4>
                   <p className="text-xs text-emerald-800 leading-normal mt-0.5">
-                    Transacting locally inside Kenya has never been faster. We use direct STK push to send a prompt directly to your Safaricom mobile phone screen. Set up sandbox simulation below.
+                    Transacting locally inside Kenya has never been faster. We use direct STK push to send an instant payment prompt directly to your Safaricom mobile phone screen.
                   </p>
                 </div>
               </div>
@@ -179,6 +186,7 @@ export default function MpesaSimModal({ isOpen, onClose, usdAmount, quoteId }: M
                       id="mpesa-pin-sim-input"
                     />
                     <span className="text-[9px] text-gray-400 mt-1 block">Simulated Sandbox PIN</span>
+                    {pinError && <p className="text-[10px] text-red-400 font-semibold mt-1">{pinError}</p>}
                   </div>
                   <div className="flex gap-2 justify-end">
                     <button

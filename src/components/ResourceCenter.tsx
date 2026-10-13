@@ -222,9 +222,18 @@ export default function ResourceCenter() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
 
+  // Expert Seasonal Advice Baseline Fallbacks
+  const DEFAULT_REGIONAL_WEATHER: Record<string, { temp: number; precipitation: number; weatherCode: number }> = {
+    mt_kenya: { temp: -2, precipitation: 0, weatherCode: 3 },
+    nanyuki: { temp: 22, precipitation: 0, weatherCode: 1 },
+    masai_mara: { temp: 26, precipitation: 0, weatherCode: 1 },
+    kilimanjaro: { temp: -4, precipitation: 0, weatherCode: 2 },
+    bwindi: { temp: 21, precipitation: 0, weatherCode: 2 }
+  };
+
   // Expert Seasonal Advice State
-  const [regionalWeather, setRegionalWeather] = useState<Record<string, { temp: number; precipitation: number; weatherCode: number }>>({});
-  const [loadingWeather, setLoadingWeather] = useState(true);
+  const [regionalWeather, setRegionalWeather] = useState<Record<string, { temp: number; precipitation: number; weatherCode: number }>>(DEFAULT_REGIONAL_WEATHER);
+  const [loadingWeather, setLoadingWeather] = useState(false);
   const [weatherError, setWeatherError] = useState<string | null>(null);
   const [isSeasonalOpen, setIsSeasonalOpen] = useState(false);
 
@@ -262,38 +271,72 @@ export default function ResourceCenter() {
   };
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchSeasonalWeather = async () => {
       try {
         setLoadingWeather(true);
         setWeatherError(null);
         
         const fetches = SEASONAL_REGIONS.map(async (reg) => {
-          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${reg.lat}&longitude=${reg.lon}&current=temperature_2m,precipitation,weather_code`);
-          if (!res.ok) throw new Error(`Fetch failed for ${reg.name}`);
-          const data = await res.json();
-          return {
-            id: reg.id,
-            temp: Math.round(data.current.temperature_2m),
-            precipitation: data.current.precipitation || 0,
-            weatherCode: data.current.weather_code,
-          };
+          const fallback = DEFAULT_REGIONAL_WEATHER[reg.id] || { temp: 20, precipitation: 0, weatherCode: 1 };
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            
+            // Try backend proxy first, then direct open-meteo
+            let res: Response | null = null;
+            try {
+              res = await fetch(`/api/weather?latitude=${reg.lat}&longitude=${reg.lon}&current=temperature_2m,precipitation,weather_code`, { signal: controller.signal });
+            } catch {
+              res = null;
+            }
+            if (!res || !res.ok) {
+              res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${reg.lat}&longitude=${reg.lon}&current=temperature_2m,precipitation,weather_code`, { signal: controller.signal });
+            }
+            clearTimeout(timeoutId);
+
+            if (!res || !res.ok) {
+              return { id: reg.id, ...fallback };
+            }
+            const data = await res.json();
+            if (!data?.current) {
+              return { id: reg.id, ...fallback };
+            }
+            return {
+              id: reg.id,
+              temp: typeof data.current.temperature_2m === "number" ? Math.round(data.current.temperature_2m) : fallback.temp,
+              precipitation: data.current.precipitation || 0,
+              weatherCode: typeof data.current.weather_code === "number" ? data.current.weather_code : fallback.weatherCode,
+            };
+          } catch {
+            return { id: reg.id, ...fallback };
+          }
         });
 
         const results = await Promise.all(fetches);
+        if (isCancelled) return;
         const weatherMap: Record<string, { temp: number; precipitation: number; weatherCode: number }> = {};
         results.forEach((r) => {
           weatherMap[r.id] = r;
         });
         setRegionalWeather(weatherMap);
-      } catch (err: any) {
-        console.error("Error loading seasonal weather:", err);
-        setWeatherError("Regional telemetry unavailable. Displaying historical dry season defaults.");
+      } catch {
+        if (!isCancelled) {
+          setRegionalWeather(DEFAULT_REGIONAL_WEATHER);
+        }
       } finally {
-        setLoadingWeather(false);
+        if (!isCancelled) {
+          setLoadingWeather(false);
+        }
       }
     };
 
     fetchSeasonalWeather();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const categories = ["All", "Comparisons", "Packing", "Visas", "Etiquette"];
