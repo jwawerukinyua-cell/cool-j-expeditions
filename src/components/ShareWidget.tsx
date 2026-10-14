@@ -16,7 +16,14 @@ export default function ShareWidget({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setShareUrl(window.location.href);
+      const updateUrl = () => setShareUrl(window.location.href);
+      updateUrl();
+      window.addEventListener("hashchange", updateUrl);
+      window.addEventListener("popstate", updateUrl);
+      return () => {
+        window.removeEventListener("hashchange", updateUrl);
+        window.removeEventListener("popstate", updateUrl);
+      };
     }
   }, []);
 

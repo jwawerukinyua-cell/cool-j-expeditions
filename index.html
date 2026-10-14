@@ -11,6 +11,10 @@
           event.preventDefault();
         }
       });
+      // Preserve SPA hash scroll target on page load/refresh
+      if (typeof window !== 'undefined' && window.location.hash && 'scrollRestoration' in history) {
+        try { history.scrollRestoration = 'manual'; } catch (e) {}
+      }
     </script>
     <!-- Google tag (gtag.js) - loaded only on live production domain to prevent ad-blocker network block errors in dev/preview -->
     <script>

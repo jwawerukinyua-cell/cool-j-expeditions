@@ -34,6 +34,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { FieldStory } from "../types";
+import { scrollToTargetSection } from "../utils/navigation";
 import coolJClean from "../assets/images/cool-j.jpg";
 import summitClean from "../assets/images/mt-kenya-summit.jpg";
 import ebolaImg from "../assets/images/ebola-virus.jpg";
@@ -457,14 +458,26 @@ export default function FieldStoriesSection({
     });
   };
 
+  // Open / Close Story Reader with URL Deep-Linking state
+  const openStoryReader = (story: FieldStory) => {
+    setSelectedStory(story);
+    if (typeof window !== "undefined") {
+      window.history.pushState(null, "", `#field-stories?story=${story.id}`);
+    }
+  };
+
+  const closeStoryReader = () => {
+    setSelectedStory(null);
+    if (typeof window !== "undefined" && (window.location.hash.includes("story=") || window.location.search.includes("story="))) {
+      window.history.replaceState(null, "", "#field-stories");
+    }
+  };
+
   // Smooth navigation to Expedition Calculator / Builder
   const handleDraftAdventure = () => {
-    setSelectedStory(null);
+    closeStoryReader();
     setTimeout(() => {
-      const builderEl = document.getElementById("builder");
-      if (builderEl) {
-        builderEl.scrollIntoView({ behavior: "smooth" });
-      }
+      scrollToTargetSection("builder", true);
     }, 120);
   };
 
@@ -492,6 +505,32 @@ export default function FieldStoriesSection({
   useEffect(() => {
     loadStories();
   }, []);
+
+  // Check URL on mount and whenever stories load for direct story deep-linking
+  useEffect(() => {
+    if (typeof window === "undefined" || stories.length === 0) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let storyParam = params.get("story");
+
+    const hash = window.location.hash;
+    if (!storyParam && hash.includes("story=")) {
+      const match = hash.match(/story=([^&]+)/);
+      if (match) storyParam = match[1];
+    } else if (!storyParam && hash.startsWith("#story-")) {
+      storyParam = hash.replace("#story-", "");
+    }
+
+    if (storyParam) {
+      const targetStory = stories.find(
+        (s) => String(s.id) === String(storyParam) || 
+               s.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").includes(storyParam!.toLowerCase())
+      );
+      if (targetStory) {
+        setSelectedStory(targetStory);
+      }
+    }
+  }, [stories]);
 
   // Handle prefill from Review Nudge
   useEffect(() => {
@@ -790,7 +829,7 @@ export default function FieldStoriesSection({
   });
 
   return (
-    <section id="field-stories" className="py-20 px-4 bg-[#F8F5EE] border-t border-[#E5DEC9] text-[#1A1A1A] relative scroll-mt-20">
+    <section id="field-stories" className="py-20 px-4 bg-[#F8F5EE] border-t border-[#E5DEC9] text-[#1A1A1A] relative scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         
         {/* Moderation Toast Notice */}
@@ -996,7 +1035,7 @@ export default function FieldStoriesSection({
               return (
                 <article
                   key={story.id}
-                  onClick={() => setSelectedStory(story)}
+                  onClick={() => openStoryReader(story)}
                   className={`bg-white rounded-2xl border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between overflow-hidden group cursor-pointer relative ${
                     isPending 
                       ? "border-amber-400 bg-amber-50/30 ring-1 ring-amber-300" 
@@ -1331,7 +1370,7 @@ export default function FieldStoriesSection({
       {selectedStory && (
         <div 
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
-          onClick={() => setSelectedStory(null)}
+          onClick={closeStoryReader}
         >
           <div 
             className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-[#C9A24A]/40 my-8 animate-in fade-in zoom-in-95 duration-200"
@@ -1358,7 +1397,7 @@ export default function FieldStoriesSection({
                 </span>
               </div>
               <button
-                onClick={() => setSelectedStory(null)}
+                onClick={closeStoryReader}
                 className="h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
@@ -2028,22 +2067,47 @@ export default function FieldStoriesSection({
 
               {/* Story Modal Footer Controls */}
               <div className="mt-8 pt-5 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <button
-                  type="button"
-                  onClick={(e) => handleLike(selectedStory.id, e)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                    likedStories[selectedStory.id]
-                      ? "bg-rose-50 text-rose-600 border border-rose-200"
-                      : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 hover:text-rose-600"
-                  }`}
-                >
-                  <Heart className={`h-4 w-4 ${likedStories[selectedStory.id] ? "fill-rose-500 text-rose-500" : ""}`} />
-                  <span>{selectedStory.likesCount} Explorer Likes</span>
-                </button>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={(e) => handleLike(selectedStory.id, e)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      likedStories[selectedStory.id]
+                        ? "bg-rose-50 text-rose-600 border border-rose-200"
+                        : "bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 hover:text-rose-600"
+                    }`}
+                  >
+                    <Heart className={`h-4 w-4 ${likedStories[selectedStory.id] ? "fill-rose-500 text-rose-500" : ""}`} />
+                    <span>{selectedStory.likesCount} Explorer Likes</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const shareUrl = `${window.location.origin}/#field-stories?story=${selectedStory.id}`;
+                      if (navigator.share) {
+                        navigator.share({
+                          title: selectedStory.title,
+                          text: `Read "${selectedStory.title}" from Cool J Expeditions Field Notes:`,
+                          url: shareUrl
+                        }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(shareUrl);
+                        setModerationNotice("Direct story link copied to clipboard!");
+                        setTimeout(() => setModerationNotice(null), 3000);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-[#0B3D2E]/10 hover:bg-[#0B3D2E]/20 text-[#0B3D2E] border border-[#0B3D2E]/20 transition-all cursor-pointer"
+                    title="Share direct link to this story"
+                  >
+                    <Share2 className="h-3.5 w-3.5 text-[#C9A24A]" />
+                    <span>Copy Direct Link</span>
+                  </button>
+                </div>
 
                 <button
                   type="button"
-                  onClick={() => setSelectedStory(null)}
+                  onClick={closeStoryReader}
                   className="px-5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-700 transition-colors cursor-pointer"
                 >
                   Close Story

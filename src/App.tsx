@@ -48,6 +48,7 @@ import ShareWidget from "./components/ShareWidget";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import QuickSupport from "./components/QuickSupport";
 import CookieConsentBanner from "./components/CookieConsentBanner";
+import { useHashNavigation } from "./utils/navigation";
 
 // Import authentic team and climber photo assets
 import teamShiptons from "./assets/images/trekking-team-resting.jpg";
@@ -125,6 +126,9 @@ const DEFAULT_REVIEWS: Review[] = [
 ];
 
 export default function App() {
+  // Global Deep-Linking & Hash Navigation Handler
+  useHashNavigation();
+
   // Booking Form state
   const [region, setRegion] = useState("Mount Kenya");
   const [activity, setActivity] = useState("Mountain climbing");
@@ -1533,7 +1537,7 @@ export default function App() {
           </div>
 
           {/* Elite Safari Fleet & Live Wildlife Moments Sub-Showcase */}
-          <div className="mt-20 pt-16 border-t border-[#E9E1D2]" id="fleet">
+          <div className="mt-20 pt-16 border-t border-[#E9E1D2] scroll-mt-24" id="fleet">
             <div className="text-center max-w-3xl mx-auto mb-12">
               <span className="text-xs uppercase font-extrabold tracking-widest text-[#8F5C38]">FLEET & LIVE ACTION</span>
               <h3 className="text-2xl sm:text-3xl font-serif font-black text-[#0b3d2e] mt-1.5 tracking-tight">
